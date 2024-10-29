@@ -511,14 +511,16 @@ export class EditorToolbar extends Component<Props> {
                             </div>
                         </div>
                     </Tooltip>
-                    <Tooltip content={_t("editor-toolbar.emoji")}>
+
+                    {/* WILL RETURN WHEN FIXED ON ECENCY */}
+                    {/* <Tooltip content={_t("editor-toolbar.emoji")}>
                         <div className="editor-tool" role="none">
                             {emoticonHappyOutlineSvg}
                             {showEmoji && <EmojiPicker fallback={(e) => {
                                 this.insertText(e, '');
                             }}/>}
                         </div>
-                    </Tooltip>
+                    </Tooltip> */}
               <Tooltip content="Markdown tutorial">
                 <a href="https://commonmark.org/help/">
                   <div className="editor-tool" role="none">

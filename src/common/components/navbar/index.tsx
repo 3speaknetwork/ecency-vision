@@ -58,6 +58,8 @@ import userAvatar from "../user-avatar";
 import { downVotingPower, votingPower } from "../../api/hive";
 import isCommunity from "../../helper/is-community";
 import { setupConfig } from "../../../setup";
+import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
+import { error, success } from "../feedback";
 
 interface Props {
   history: History;
@@ -217,6 +219,33 @@ export class NavBar extends Component<Props, State> {
     this.props.toggleTheme(_default_theme);
 };
 
+openSubmitPage = async () => {
+  const { activeUser, history }  = this.props
+  try {
+    const baUser = await getUserByUsername(activeUser!.username)
+
+      console.log(baUser)
+    let btcAddress;
+      if(baUser?.bacUser?.bitcoinAddress) {
+        btcAddress = baUser?.bacUser?.bitcoinAddress
+        const addressBalance = await getBtcWalletBalance("bc1qdwtzkgwmg5gsexvypy07k724tx9wxethg3nn43");
+        if(addressBalance.balance < 0.001) {
+          error("You must have at least 0.001 btc to login");
+          return;
+        } else {
+          success("Access granted...")
+          history.push(`/submit`);
+        }
+        console.log(addressBalance)
+      } else {
+        error("Sorry, you have no bitcoin profile");
+        return
+      }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
   render() {
     const { global, activeUser, ui, step, toggleUIProp, setActiveUser, match } =
       this.props;
@@ -324,12 +353,13 @@ export class NavBar extends Component<Props, State> {
                 )}
                 {(step !== 1 || transparentVerify) && (
                   <ToolTip content={_t("navbar.post")}>
-                    <Link
+                    <div
                       className="switch-theme pencil"
-                      to={`/submit?com=${global.hive_id}`}
+                      // to={`/submit?com=${global.hive_id}`}
+                      onClick={this.openSubmitPage}
                     >
                       {pencilOutlineSvg}
-                    </Link>
+                    </div>
                   </ToolTip>
                 )}
               </div>

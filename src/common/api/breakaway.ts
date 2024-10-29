@@ -144,5 +144,16 @@ export const getBtcTransactions = async (address: string) => {
   }
 };
 
+export const getUserByUsername = async (username: string) => {
+  try {
+    const response = await axios.get(`${baUrl}/user/${username}`);
 
+    console.log(response)
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    throw error;
+  }
+};
 

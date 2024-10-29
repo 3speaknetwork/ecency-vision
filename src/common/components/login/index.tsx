@@ -23,7 +23,7 @@ import UserAvatar from "../user-avatar";
 import Tooltip from "../tooltip";
 import PopoverConfirm from "../popover-confirm";
 import OrDivider from "../or-divider";
-import {error} from "../feedback";
+import {error, success} from "../feedback";
 
 import {getAuthUrl, makeHsCode} from "../../helper/hive-signer";
 import {hsLogin} from "../../../desktop/app/helper/hive-signer";
@@ -43,7 +43,7 @@ import _c from "../../util/fix-class-names";
 
 import {deleteForeverSvg} from "../../img/svg";
 import { setupConfig } from "../../../setup";
-import { processLogin } from "../../api/breakaway";
+import { processLogin, getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
 import { getCommunity } from "../../api/bridge";
 
 declare var window: AppWindow;
@@ -111,7 +111,29 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
 
     this.stateSet({ inProgress: true });
 
+    let btcAddress;
+
     try {
+      const baUser = await getUserByUsername(username)
+
+      console.log(baUser)
+  
+      if(baUser?.bacUser?.bitcoinAddress) {
+        btcAddress = baUser?.bacUser?.bitcoinAddress
+        const addressBalance = await getBtcWalletBalance("bc1qdwtzkgwmg5gsexvypy07k724tx9wxethg3nn43");
+        if(addressBalance.balance < 0.001) {
+          error("You must have at least 0.001 btc to login");
+          return;
+        } else {
+          success("Access granted...")
+        }
+        console.log(addressBalance)
+      } else {
+        error("Sorry, you have no bitcoin profile");
+        return
+      }
+  
+      // return;
       account = await getAccount(username);
     } catch (err) {
       error(_t("login.error-user-fetch"));
@@ -126,11 +148,11 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
     }
 
     const hasPostingPerm =
-      account?.posting!.account_auths.filter((x) => x[0] === "ecency.app")
+      account!.posting!.account_auths.filter((x) => x[0] === "ecency.app")
         .length > 0;
 
     if (!hasPostingPerm) {
-      const weight = account.posting!.weight_threshold;
+      const weight = account!.posting!.weight_threshold;
 
       this.stateSet({ inProgress: true });
       try {
