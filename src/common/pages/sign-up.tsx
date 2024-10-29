@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
-import { Button, Form, FormControl, Spinner } from "react-bootstrap";
+import { Button, Card, Form, FormControl, Spinner } from "react-bootstrap";
 import {
   PageProps,
   pageMapDispatchToProps,
@@ -29,6 +29,7 @@ import { getAccount } from "../api/hive";
 import { OffchainUser } from "../components/offchain-users";
 import QRCode from "react-qr-code";
 import { History } from "history";
+import { OnboardUser } from "../components/onboard";
 
 const HiveLogo = require("../img/hive-logo.jpeg");
 const solanaLogo = require("../img/solanaLogo.png");
@@ -52,7 +53,7 @@ const SignUpPage = (props: Props | any) => {
   const [community, setCommunity] = useState<Community | null>(null);
   const [newUserKeys, setNewUserKeys]: any = useState(null);
   const [accountPassword, setAccountPassword] = useState("");
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number | string>(1);
   const [error, setError] = useState("");
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [accountType, setAccountType] = useState("Hive");
@@ -248,7 +249,7 @@ const SignUpPage = (props: Props | any) => {
         : NavBar({ ...props })}
       <div className={`sign-up-page ${containerClasses}`}>
         <div className="signup-wrapper">
-          {step === 1 && (
+          {(step === 1 || step === 2) && (
             <div className="account-types align-self-center d-flex">
               {/* <h3>Sign up with</h3> */}
               <div
@@ -390,7 +391,77 @@ const SignUpPage = (props: Props | any) => {
                     </div>
                   </div>
                 )}
-                {newUserKeys && step === 2 && (
+
+                {step === 2 && ( 
+                  <div className="d-fex flex-column w-50">
+                    <div className="card border bg-white border-[--border-color] rounded mb-3">
+                      <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
+                        <b>{_t("sign-up.buy-account")}</b>
+                      </div>
+                      <div className="p-3">
+                        <p>{_t("sign-up.buy-account-desc")}</p>
+                        <ul>
+                          <li>{_t("sign-up.buy-account-li-1")}</li>
+                          {/* <li>{_t("sign-up.buy-account-li-2")}</li>
+                          <li>{_t("sign-up.buy-account-li-3")}</li> */}
+                        </ul>
+                      </div>
+                      <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
+                        <Button className="w-full" 
+                        // onClick={() => setStage(Stage.BUY_ACCOUNT)}
+                        >
+                         Buy Account
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="card border bg-white border-[--border-color] rounded mb-3">
+                  <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
+                    <b>
+                      {props.activeUser
+                        ? _t("onboard.title-active-user")
+                        : _t("onboard.title-visitor")}
+                    </b>
+                  </div>
+                  <div className="p-3">
+                    <p>
+                      {props.activeUser
+                        ? _t("onboard.description-active-user")
+                        : _t("onboard.description-visitor")}
+                    </p>
+                    <ul>
+                      {props.activeUser && <li>{_t("onboard.creating-description")}</li>}
+                      {!props.activeUser && <li>{_t("onboard.asking-description")}</li>}
+                    </ul>
+                  </div>
+                  <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
+                    {/* <Link to={`/onboard-friend/asking/${urlHash}`}> */}
+                      <Button className="w-full"
+                      onClick={() => setStep("onboard")}
+                      >
+                        {props.activeUser ? _t("onboard.creating") : _t("onboard.asking")}
+                      </Button>
+                    {/* </Link> */}
+                  </div>
+                </div>
+                  </div>
+                )}
+
+                {step === "onboard" && (
+                  <OnboardUser
+                  newUserKeys={newUserKeys}
+                  step={step} 
+                  isDownloaded={isDownloaded}
+                  activeUser={activeUser}
+                  global={global}
+                  downloadKeys={downloadKeys}
+                  formatString={formatString}
+                  history={history}
+                  urlHash={urlHash}
+                  accountPassword={accountPassword}
+                  username={username}
+                  />
+                )}
+                {/* {newUserKeys && step === 2 && (
                   <div className="success-wrapper">
                     <div className="success-info">
                       <h3>Account creation steps</h3>
@@ -549,7 +620,7 @@ const SignUpPage = (props: Props | any) => {
                       )}
                     </div>
                   </div>
-                )}
+                )} */}
               </>
             )}
             {accountType === "Solana" && (
