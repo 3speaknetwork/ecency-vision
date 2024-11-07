@@ -39,6 +39,7 @@ import { EditPic } from '../community-card';
 import { getRelationshipBetweenAccounts } from "../../api/bridge";
 import { Skeleton } from "../skeleton";
 import { ResourceCreditsInfo } from "../resource-credits";
+import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
 
 interface Props {
     global: Global;
@@ -65,6 +66,7 @@ export const ProfileCard = (props: Props) => {
     const [followsActiveUserLoading, setFollowsActiveUserLoading] = useState(false);
     const [rcPercent, setRcPercent] = useState(100);
     const [jsonMetaData, setJsonMetaData] = useState<any>(null)
+    const [btcBalance, setBtcBalance] = useState<any>(0.000)
     
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({} as any), []);
@@ -90,6 +92,7 @@ export const ProfileCard = (props: Props) => {
     [account]);
 
     useEffect(()=>{
+        getBtcBal()
         setIsmounted(true);
         return () => setIsmounted(false)
     },[])
@@ -133,6 +136,26 @@ export const ProfileCard = (props: Props) => {
     const toggleFollowing = () => {
         setFollowingList(!followingList);
     };
+
+    const getBtcBal = async () => {
+        const { activeUser }  = props
+        try {
+          const baUser = await getUserByUsername(activeUser!.username)
+      
+            console.log(baUser)
+          let btcAddress;
+            if(baUser?.bacUser?.bitcoinAddress) {
+              btcAddress = baUser?.bacUser?.bitcoinAddress
+              const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
+              setBtcBalance(btcBalance?.balance)
+             
+              console.log(addressBalance)
+            }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
     const loggedIn = activeUser && activeUser.username;
     
     if (!account.__loaded) {
@@ -169,6 +192,7 @@ export const ProfileCard = (props: Props) => {
                     />
                 }
                 {account.__loaded && <div className="reputation">{accountReputation(account.reputation!)}</div>}
+                {account.__loaded && <div className="btc-reputation">{btcBalance?.toFixed(2)}</div>}
             </div>
 
             <h1>

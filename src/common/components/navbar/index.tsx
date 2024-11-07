@@ -228,9 +228,9 @@ openSubmitPage = async () => {
     let btcAddress;
       if(baUser?.bacUser?.bitcoinAddress) {
         btcAddress = baUser?.bacUser?.bitcoinAddress
-        const addressBalance = await getBtcWalletBalance("bc1qdwtzkgwmg5gsexvypy07k724tx9wxethg3nn43");
-        if(addressBalance.balance < 0.001) {
-          error("You must have at least 0.001 btc to login");
+        const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
+        if(addressBalance.balance < 0.0005) {
+          error("You must have at least 0.0005 btc to create a post");
           return;
         } else {
           success("Access granted...")

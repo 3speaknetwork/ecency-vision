@@ -34,6 +34,18 @@
       padding: 4px 12px;
       position: absolute;
     }
+
+    .btc-reputation {
+      background: $dark-sky-blue;
+      border-radius: 25px;
+      bottom: 2px;
+      color: $white;
+      font-weight: 700;
+      right: 0;
+      line-height: 1em;
+      padding: 4px 12px;
+      position: absolute;
+    }
   }
 
   .username {

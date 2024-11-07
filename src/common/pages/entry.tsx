@@ -1173,7 +1173,7 @@ class EntryPage extends BaseComponent<Props, State> {
                                             </span>
                                             <div className="app" title={app}>
                                               {/* We should soww exact community */}
-                                              <span>Posted from spendHBD</span>
+                                              <span>Posted from {global.communityTitle}</span>
                                               {/* <Tsx
                                                 k="entry.via-app"
                                                 args={{ app: appShort }}
