@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios"
 import * as ls from "../util/local-storage";
 
-// const baUrl = "http://localhost:4000"
+const baUrl = "http://localhost:4000"
 // const baUrl = "https://breakaway-points-system-api.onrender.com"
-const baUrl = "https://api.breakaway.community"
+// const baUrl = "https://api.breakaway.community"
 const accessToken = ls.get("ba_access_token")
 
 export const createBreakawayUser = async (username: string, community: string, referral: string, email: string)=> {
@@ -157,3 +157,15 @@ export const getUserByUsername = async (username: string) => {
   }
 };
 
+export const createFreeAccount = async (username: string) => {
+  try {
+    const response = await axios.post(`${baUrl}/create-free-account`, {username});
+
+    console.log(response)
+
+    return response.data;
+  } catch (error) {
+    console.error('Something went wrong:', error);
+    throw error;
+  }
+};

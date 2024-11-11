@@ -188,7 +188,11 @@
     "buy-account-desc": "Pay with bitcoin lightning and get a full-fledged Hive account.",
     "buy-account-li-1": "Enjoy instant creation.",
     "buy-account-li-2": "3x RC compared to normal new accounts",
-    "buy-account-li-3": "300 Points to help you get started"
+    "buy-account-li-3": "300 Points to help you get started",
+    "free-account": "Get a free account",
+    "free-account-desc": "Get a full-fledged free Hive account.",
+    "free-account-li-1": "Instant account creation for free.",
+    "free-account-li-2": "Cost covered by community"
   },
   "onboard": {
     "title-active-user": "Onboard a friend",

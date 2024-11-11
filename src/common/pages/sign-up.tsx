@@ -30,6 +30,7 @@ import { OffchainUser } from "../components/offchain-users";
 import QRCode from "react-qr-code";
 import { History } from "history";
 import { OnboardUser } from "../components/onboard";
+import { FreeAccount } from "../components/free-account/FreeAccount";
 
 const HiveLogo = require("../img/hive-logo.jpeg");
 const solanaLogo = require("../img/solanaLogo.png");
@@ -415,40 +416,78 @@ const SignUpPage = (props: Props | any) => {
                         </Button>
                       </div>
                     </div>
+
                     <div className="card border bg-white border-[--border-color] rounded mb-3">
-                  <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
-                    <b>
-                      {props.activeUser
-                        ? _t("onboard.title-active-user")
-                        : _t("onboard.title-visitor")}
-                    </b>
-                  </div>
-                  <div className="p-3">
-                    <p>
-                      {props.activeUser
-                        ? _t("onboard.description-active-user")
-                        : _t("onboard.description-visitor")}
-                    </p>
-                    <ul>
-                      {props.activeUser && <li>{_t("onboard.creating-description")}</li>}
-                      {!props.activeUser && <li>{_t("onboard.asking-description")}</li>}
-                    </ul>
-                  </div>
-                  <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
-                    {/* <Link to={`/onboard-friend/asking/${urlHash}`}> */}
-                      <Button className="w-full"
-                      onClick={() => setStep("onboard")}
-                      >
-                        {props.activeUser ? _t("onboard.creating") : _t("onboard.asking")}
-                      </Button>
-                    {/* </Link> */}
-                  </div>
-                </div>
+                      <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
+                        <p>{_t("sign-up.free-account")}</p>
+                      </div>
+                      <div className="p-3">
+                        <p>{_t("sign-up.free-account-desc")}</p>
+                        <ul>
+                          <li>{_t("sign-up.free-account-li-1")}</li>
+                          <li>{_t("sign-up.free-account-li-2")}</li>
+                          {/* <li>{_t("sign-up.buy-account-li-3")}</li> */}
+                        </ul>
+                      </div>
+                      <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
+                        <Button className="w-full" 
+                        onClick={() => setStep("free-account")}
+                        >
+                         Get a free Account
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="card border bg-white border-[--border-color] rounded mb-3">
+                      <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
+                        <b>
+                          {props.activeUser
+                            ? _t("onboard.title-active-user")
+                            : _t("onboard.title-visitor")}
+                        </b>
+                      </div>
+                      <div className="p-3">
+                        <p>
+                          {props.activeUser
+                            ? _t("onboard.description-active-user")
+                            : _t("onboard.description-visitor")}
+                        </p>
+                        <ul>
+                          {props.activeUser && <li>{_t("onboard.creating-description")}</li>}
+                          {!props.activeUser && <li>{_t("onboard.asking-description")}</li>}
+                        </ul>
+                      </div>
+                      <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
+                        {/* <Link to={`/onboard-friend/asking/${urlHash}`}> */}
+                          <Button className="w-full"
+                          onClick={() => setStep("onboard")}
+                          >
+                            {props.activeUser ? _t("onboard.creating") : _t("onboard.asking")}
+                          </Button>
+                        {/* </Link> */}
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {step === "onboard" && (
                   <OnboardUser
+                  newUserKeys={newUserKeys}
+                  step={step} 
+                  isDownloaded={isDownloaded}
+                  activeUser={activeUser}
+                  global={global}
+                  downloadKeys={downloadKeys}
+                  formatString={formatString}
+                  history={history}
+                  urlHash={urlHash}
+                  accountPassword={accountPassword}
+                  username={username}
+                  />
+                )}
+
+                {step === "free-account" && (
+                  <FreeAccount
                   newUserKeys={newUserKeys}
                   step={step} 
                   isDownloaded={isDownloaded}
