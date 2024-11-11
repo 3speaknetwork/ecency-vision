@@ -396,7 +396,7 @@ const SignUpPage = (props: Props | any) => {
                   <div className="d-fex flex-column w-50">
                     <div className="card border bg-white border-[--border-color] rounded mb-3">
                       <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
-                        <b>{_t("sign-up.buy-account")}</b>
+                        <b>{_t("sign-up.buy-account")} <span className="coming-soon">(comming soon)</span></b>
                       </div>
                       <div className="p-3">
                         <p>{_t("sign-up.buy-account-desc")}</p>
@@ -408,6 +408,7 @@ const SignUpPage = (props: Props | any) => {
                       </div>
                       <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
                         <Button className="w-full" 
+                        disabled={true}
                         // onClick={() => setStage(Stage.BUY_ACCOUNT)}
                         >
                          Buy Account
