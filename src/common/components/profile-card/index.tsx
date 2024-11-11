@@ -66,7 +66,7 @@ export const ProfileCard = (props: Props) => {
     const [followsActiveUserLoading, setFollowsActiveUserLoading] = useState(false);
     const [rcPercent, setRcPercent] = useState(100);
     const [jsonMetaData, setJsonMetaData] = useState<any>(null)
-    const [btcBalance, setBtcBalance] = useState<any>(0.000)
+    const [btcBalance, setBtcBalance] = useState<any>(0.00)
     
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({} as any), []);
@@ -92,9 +92,12 @@ export const ProfileCard = (props: Props) => {
     [account]);
 
     useEffect(()=>{
-        getBtcBal()
         setIsmounted(true);
         return () => setIsmounted(false)
+    },[])
+
+    useEffect(()=> {
+        getBtcBal()
     },[])
 
     useEffect(() => {
@@ -105,7 +108,6 @@ export const ProfileCard = (props: Props) => {
     }, [account.name]);
 
     useEffect(() => {
-        console.log(global)
         const getMetaData = () => {
             try {
                 const metaData = JSON.parse(activeUser?.data?.posting_json_metadata);
@@ -142,14 +144,11 @@ export const ProfileCard = (props: Props) => {
         try {
           const baUser = await getUserByUsername(activeUser!.username)
       
-            console.log(baUser)
-          let btcAddress;
             if(baUser?.bacUser?.bitcoinAddress) {
-              btcAddress = baUser?.bacUser?.bitcoinAddress
-              const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
-              setBtcBalance(btcBalance?.balance)
+              const btcAddress = baUser?.bacUser?.bitcoinAddress
+              const addressBalance = await getBtcWalletBalance(btcAddress);
+              setBtcBalance(addressBalance?.balance)
              
-              console.log(addressBalance)
             }
         } catch (error) {
           console.log(error)
@@ -195,9 +194,12 @@ export const ProfileCard = (props: Props) => {
                 {account.__loaded && <div className="btc-reputation">{btcBalance?.toFixed(2)}</div>}
             </div>
 
-            <h1>
-                <div className="username">{account.name}</div>
-            </h1>
+            <div>
+                <h1 className="username">{account.name}</h1>
+                <h5 className="btc-balance">
+                    Btc Balance: {btcBalance?.toFixed(2)}
+                </h5>
+            </div>
 
             <div>
                 <ResourceCreditsInfo {...props} rcPercent={rcPercent} account={account} />
