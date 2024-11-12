@@ -397,7 +397,7 @@ const SignUpPage = (props: Props | any) => {
                   <div className="d-fex flex-column w-50">
                     <div className="card border bg-white border-[--border-color] rounded mb-3">
                       <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
-                        <b>{_t("sign-up.buy-account")} <span className="coming-soon">(comming soon)</span></b>
+                        <b>{_t("sign-up.buy-account")} <span className="coming-soon">(coming soon)</span></b>
                       </div>
                       <div className="p-3">
                         <p>{_t("sign-up.buy-account-desc")}</p>
@@ -417,26 +417,26 @@ const SignUpPage = (props: Props | any) => {
                       </div>
                     </div>
 
-                    <div className="card border bg-white border-[--border-color] rounded mb-3">
+                    {/* <div className="card border bg-white border-[--border-color] rounded mb-3">
                       <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
-                        <p>{_t("sign-up.free-account")}</p>
+                        <p>{_t("sign-up.free-account")} <span className="coming-soon">(coming soon)</span></p>
                       </div>
                       <div className="p-3">
                         <p>{_t("sign-up.free-account-desc")}</p>
                         <ul>
                           <li>{_t("sign-up.free-account-li-1")}</li>
                           <li>{_t("sign-up.free-account-li-2")}</li>
-                          {/* <li>{_t("sign-up.buy-account-li-3")}</li> */}
                         </ul>
                       </div>
                       <div className="bg-gray-100 dark:bg-gray-800 border-t border-[--border-color] py-2 px-3">
                         <Button className="w-full" 
-                        onClick={() => setStep("free-account")}
+                          onClick={() => setStep("free-account")}
+                          disabled={true}
                         >
                          Get a free Account
                         </Button>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="card border bg-white border-[--border-color] rounded mb-3">
                       <div className="bg-gray-100 dark:bg-gray-800 border-b border-[--border-color] p-3">
