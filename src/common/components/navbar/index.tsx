@@ -222,24 +222,29 @@ export class NavBar extends Component<Props, State> {
 openSubmitPage = async () => {
   const { activeUser, history }  = this.props
   try {
-    const baUser = await getUserByUsername(activeUser!.username)
+    
+    if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
+        const baUser = await getUserByUsername(activeUser!.username)
+    
+        let btcAddress;
 
-      console.log(baUser)
-    let btcAddress;
-      if(baUser?.bacUser?.bitcoinAddress) {
-        btcAddress = baUser?.bacUser?.bitcoinAddress
-        const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
-        if(addressBalance.balance < 0.0005) {
-          error("You must have at least 0.0005 btc to create a post");
-          return;
+        if(baUser?.bacUser?.bitcoinAddress) {
+          btcAddress = baUser?.bacUser?.bitcoinAddress
+          const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
+          if(addressBalance.balance < 0.00005) {
+            error("You must have at least 0.00005 btc to create a post");
+            return;
+          } else {
+            history.push(`/submit`);
+          }
+  
         } else {
-          success("Access granted...")
-          history.push(`/submit`);
+          error("Sorry, you have no bitcoin profile");
+          return
         }
-        console.log(addressBalance)
+
       } else {
-        error("Sorry, you have no bitcoin profile");
-        return
+        history.push(`/submit`);
       }
   } catch (error) {
     console.log(error)

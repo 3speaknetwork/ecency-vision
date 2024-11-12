@@ -116,32 +116,32 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
     try {
       const baUser = await getUserByUsername(username)
   
-      if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
-        if(baUser?.bacUser?.bitcoinAddress) {
-          btcAddress = baUser?.bacUser?.bitcoinAddress
-          const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
-          if(addressBalance.balance > 0.0005) {
-            error("You must have at least 0.0005 btc to login");
-            return;
-          } else {
-            success("Access granted...")
-          }
+      // if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
+      //   if(baUser?.bacUser?.bitcoinAddress) {
+      //     btcAddress = baUser?.bacUser?.bitcoinAddress
+      //     const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
+      //     if(addressBalance.balance > 0.0005) {
+      //       error("You must have at least 0.0005 btc to login");
+      //       return;
+      //     } else {
+      //       success("Access granted...")
+      //     }
   
-          if(this.props.global.hive_id === "hive-159314" && baUser?.bacUser?.ownsBTCMachine) {
-            error("Sorry, you have no bitcoin machine");
-            return;
-          } else {
-            success("Access granted...")
-          }
-          console.log(addressBalance)
-        } else {
-          error("Sorry, you have no bitcoin profile");
-          return
-        }
+      //     if(this.props.global.hive_id === "hive-159314" && baUser?.bacUser?.ownsBTCMachine) {
+      //       error("Sorry, you have no bitcoin machine");
+      //       return;
+      //     } else {
+      //       success("Access granted...")
+      //     }
+      //     console.log(addressBalance)
+      //   } else {
+      //     error("Sorry, you have no bitcoin profile");
+      //     return
+      //   }
 
-      } else {
-        success("Access granted...")
-      }
+      // } else {
+      //   success("Access granted...")
+      // }
   
       // return;
       account = await getAccount(username);

@@ -157,9 +157,22 @@ export const getUserByUsername = async (username: string) => {
   }
 };
 
-export const createFreeAccount = async (username: string) => {
+export const createFreeAccount = async (username: string, keys: any) => {
   try {
-    const response = await axios.post(`${baUrl}/create-free-account`, {username});
+    const response = await axios.post(`${baUrl}/create-free-account`, {username, accountKeys: keys});
+
+    console.log(response)
+
+    return response.data;
+  } catch (error) {
+    console.error('Something went wrong:', error);
+    throw error;
+  }
+};
+
+export const getAccountKeys = async (username: string) => {
+  try {
+    const response = await axios.post(`${baUrl}/get-account-keys`, {username});
 
     console.log(response)
 

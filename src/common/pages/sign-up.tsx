@@ -488,16 +488,7 @@ const SignUpPage = (props: Props | any) => {
 
                 {step === "free-account" && (
                   <FreeAccount
-                  newUserKeys={newUserKeys}
-                  step={step} 
-                  isDownloaded={isDownloaded}
                   activeUser={activeUser}
-                  global={global}
-                  downloadKeys={downloadKeys}
-                  formatString={formatString}
-                  history={history}
-                  urlHash={urlHash}
-                  accountPassword={accountPassword}
                   username={username}
                   />
                 )}
