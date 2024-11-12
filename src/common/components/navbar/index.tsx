@@ -58,6 +58,8 @@ import userAvatar from "../user-avatar";
 import { downVotingPower, votingPower } from "../../api/hive";
 import isCommunity from "../../helper/is-community";
 import { setupConfig } from "../../../setup";
+import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
+import { error, success } from "../feedback";
 
 interface Props {
   history: History;
@@ -217,6 +219,38 @@ export class NavBar extends Component<Props, State> {
     this.props.toggleTheme(_default_theme);
 };
 
+openSubmitPage = async () => {
+  const { activeUser, history }  = this.props
+  try {
+    
+    if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
+        const baUser = await getUserByUsername(activeUser!.username)
+    
+        let btcAddress;
+
+        if(baUser?.bacUser?.bitcoinAddress) {
+          btcAddress = baUser?.bacUser?.bitcoinAddress
+          const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
+          if(addressBalance.balance < 0.00005) {
+            error("You must have at least 0.00005 btc to create a post");
+            return;
+          } else {
+            history.push(`/submit`);
+          }
+  
+        } else {
+          error("Sorry, you have no bitcoin profile");
+          return
+        }
+
+      } else {
+        history.push(`/submit`);
+      }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
   render() {
     const { global, activeUser, ui, step, toggleUIProp, setActiveUser, match } =
       this.props;
@@ -324,12 +358,13 @@ export class NavBar extends Component<Props, State> {
                 )}
                 {(step !== 1 || transparentVerify) && (
                   <ToolTip content={_t("navbar.post")}>
-                    <Link
+                    <div
                       className="switch-theme pencil"
-                      to={`/submit?com=${global.hive_id}`}
+                      // to={`/submit?com=${global.hive_id}`}
+                      onClick={this.openSubmitPage}
                     >
                       {pencilOutlineSvg}
-                    </Link>
+                    </div>
                   </ToolTip>
                 )}
               </div>

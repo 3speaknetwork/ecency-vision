@@ -39,6 +39,7 @@ import { EditPic } from '../community-card';
 import { getRelationshipBetweenAccounts } from "../../api/bridge";
 import { Skeleton } from "../skeleton";
 import { ResourceCreditsInfo } from "../resource-credits";
+import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
 
 interface Props {
     global: Global;
@@ -65,6 +66,7 @@ export const ProfileCard = (props: Props) => {
     const [followsActiveUserLoading, setFollowsActiveUserLoading] = useState(false);
     const [rcPercent, setRcPercent] = useState(100);
     const [jsonMetaData, setJsonMetaData] = useState<any>(null)
+    const [btcBalance, setBtcBalance] = useState<any>(0.00)
     
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({} as any), []);
@@ -94,6 +96,10 @@ export const ProfileCard = (props: Props) => {
         return () => setIsmounted(false)
     },[])
 
+    useEffect(()=> {
+        getBtcBal()
+    },[])
+
     useEffect(() => {
         setFollowersList(false);
         setFollowingList(false);
@@ -102,7 +108,6 @@ export const ProfileCard = (props: Props) => {
     }, [account.name]);
 
     useEffect(() => {
-        console.log(global)
         const getMetaData = () => {
             try {
                 const metaData = JSON.parse(activeUser?.data?.posting_json_metadata);
@@ -133,6 +138,23 @@ export const ProfileCard = (props: Props) => {
     const toggleFollowing = () => {
         setFollowingList(!followingList);
     };
+
+    const getBtcBal = async () => {
+        const { activeUser }  = props
+        try {
+          const baUser = await getUserByUsername(activeUser!.username)
+      
+            if(baUser?.bacUser?.bitcoinAddress) {
+              const btcAddress = baUser?.bacUser?.bitcoinAddress
+              const addressBalance = await getBtcWalletBalance(btcAddress);
+              setBtcBalance(addressBalance?.balance)
+             
+            }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
     const loggedIn = activeUser && activeUser.username;
     
     if (!account.__loaded) {
@@ -169,11 +191,15 @@ export const ProfileCard = (props: Props) => {
                     />
                 }
                 {account.__loaded && <div className="reputation">{accountReputation(account.reputation!)}</div>}
+                {account.__loaded && <div className="btc-reputation">{btcBalance?.toFixed(2)}</div>}
             </div>
 
-            <h1>
-                <div className="username">{account.name}</div>
-            </h1>
+            <div>
+                <h1 className="username">{account.name}</h1>
+                <h5 className="btc-balance">
+                    Btc Balance: {btcBalance?.toFixed(2)}
+                </h5>
+            </div>
 
             <div>
                 <ResourceCreditsInfo {...props} rcPercent={rcPercent} account={account} />
