@@ -191,26 +191,31 @@ export const ProfileCard = (props: Props) => {
                     />
                 }
                 {account.__loaded && <div className="reputation">{accountReputation(account.reputation!)}</div>}
-                {account.__loaded && <div className="btc-reputation">{btcBalance?.toFixed(2)}</div>}
+                {/* {account.__loaded && <div className="btc-reputation">{btcBalance?.toFixed(2)}</div>} */}
             </div>
 
-            <div>
+            {/* <div>
                 <h1 className="username">{account.name}</h1>
                 <h5 className="btc-balance">
                     Btc Balance: {btcBalance?.toFixed(2)}
                 </h5>
-            </div>
+            </div> */}
 
             <div>
                 <ResourceCreditsInfo {...props} rcPercent={rcPercent} account={account} />
             </div>
 
-            { (global?.communityTitle === "Bitcoin Machines" && global?.hive_id === "hive-159314") && 
+            { ((global?.communityTitle === "Bitcoin Machines" && global?.hive_id === "hive-159314") || 
+            global?.hive_id === "hive-125568") && 
             <div className="btc-profile">
-                <h5>BTC ordinal info</h5>
+                <h5>BTC info</h5>
                 <div className="btc-info">
                     <span>Address:</span>
                     <span className="b-info">{formatString(jsonMetaData?.bitcoin.address)}</span>
+                </div>
+                <div className="btc-info">
+                    <span>Btc Balance:</span>
+                    <span className="b-info">{btcBalance?.toFixed(2)}</span>
                 </div>
                 <div className="btc-info">
                     <span>Message:</span>
