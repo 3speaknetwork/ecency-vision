@@ -45,7 +45,7 @@ interface Props {
     global: Global;
     history: History;
     activeUser: ActiveUser | any;
-    account: Account;
+    account: Account | any;
     section?: string;
     addAccount: (data: Account) => void;
     updateActiveUser: (data?: Account) => void;
@@ -109,8 +109,9 @@ export const ProfileCard = (props: Props) => {
 
     useEffect(() => {
         const getMetaData = () => {
+            console.log(account)
             try {
-                const metaData = JSON.parse(activeUser?.data?.posting_json_metadata);
+                const metaData = JSON.parse(account?.posting_json_metadata);
                 setJsonMetaData(metaData)
             } catch (error) {
                 console.log(error)
@@ -207,7 +208,7 @@ export const ProfileCard = (props: Props) => {
 
             { ((global?.communityTitle === "Bitcoin Machines" && global?.hive_id === "hive-159314") || 
             global?.hive_id === "hive-125568") && 
-            <div className="btc-profile">
+            (jsonMetaData?.bitcoin ? <div className="btc-profile">
                 <h5>BTC info</h5>
                 <div className="btc-info">
                     <span>Address:</span>
@@ -225,7 +226,7 @@ export const ProfileCard = (props: Props) => {
                     <span>Signature:</span>
                     <span className="b-info">{formatString(jsonMetaData?.bitcoin.signature)}</span>
                 </div>
-            </div> }
+            </div> : <></>) }
 
             {loggedIn && !isMyProfile && 
             <div className="d-flex justify-content-center mb-3 d-md-block">

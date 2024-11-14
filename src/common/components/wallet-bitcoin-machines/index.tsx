@@ -102,7 +102,7 @@ interface Props {
     dynamicProps: DynamicProps;
     history: History;
     activeUser: ActiveUser | any;
-    account: Account;
+    account: Account | any;
     points: Points;
     signingKey: string;
     transactions: Transactions;
@@ -142,7 +142,8 @@ export const WalletBtc = (props: Props) => {
     useEffect(() => {
         const getMetaData = () => {
             try {
-                const metaData = JSON.parse(activeUser?.data?.posting_json_metadata);
+                ///account
+                const metaData = JSON.parse(account?.posting_json_metadata);
                 setJsonMetaData(metaData)
             } catch (error) {
                 console.log(error)
