@@ -111,13 +111,11 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
 
     this.stateSet({ inProgress: true });
 
-    let btcAddress;
-
     try {
-      const baUser = await getUserByUsername(username)
-  
+      
       // if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
-      //   if(baUser?.bacUser?.bitcoinAddress) {
+        //   if(baUser?.bacUser?.bitcoinAddress) {
+        // const baUser = await getUserByUsername(username)
       //     btcAddress = baUser?.bacUser?.bitcoinAddress
       //     const addressBalance = await getBtcWalletBalance(baUser?.bacUser?.bitcoinAddress);
       //     if(addressBalance.balance > 0.0005) {
