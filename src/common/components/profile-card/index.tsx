@@ -40,6 +40,9 @@ import { getRelationshipBetweenAccounts } from "../../api/bridge";
 import { Skeleton } from "../skeleton";
 import { ResourceCreditsInfo } from "../resource-credits";
 import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
+import { copyContent } from "../../img/svg";
+import { Button } from "react-bootstrap";
+import { success } from "../feedback";
 
 interface Props {
     global: Global;
@@ -172,6 +175,16 @@ export const ProfileCard = (props: Props) => {
 
     const formatString = (str: string) => str?.length <= 20 ? str : str?.slice(0, 10) + "..." + str?.slice(-10);
 
+    const copyToClipboard = (text: string) => {
+        const textField = document.createElement('textarea');
+        textField.innerText = text;
+        document.body.appendChild(textField);
+        textField.select();
+        document.execCommand('copy');
+        textField.remove();
+        success("Copied to clipboard");
+    }
+
     const vPower = votingPower(account);
 
     const isMyProfile = activeUser && activeUser.username === account.name && activeUser.data.__loaded && activeUser.data.profile;
@@ -212,7 +225,7 @@ export const ProfileCard = (props: Props) => {
                 <h5>BTC info</h5>
                 <div className="btc-info">
                     <span>Address:</span>
-                    <span className="b-info">{formatString(jsonMetaData?.bitcoin.address)}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.address)}>{formatString(jsonMetaData?.bitcoin.address)}{copyContent}</span>
                 </div>
                 <div className="btc-info">
                     <span>Btc Balance:</span>
@@ -220,11 +233,14 @@ export const ProfileCard = (props: Props) => {
                 </div>
                 <div className="btc-info">
                     <span>Message:</span>
-                    <span className="b-info">{jsonMetaData?.bitcoin.message}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.message)}>{jsonMetaData?.bitcoin.message}{copyContent}</span>
                 </div>
                 <div className="btc-info">
                     <span>Signature:</span>
-                    <span className="b-info">{formatString(jsonMetaData?.bitcoin.signature)}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.signature)}>{formatString(jsonMetaData?.bitcoin.signature)}{copyContent}</span>
+                    <a href="https://www.verifybitcoinmessage.com/" target="_blank" rel="noopener noreferrer">
+                       Click to Verify signature
+                    </a>
                 </div>
             </div> : <></>) }
 
