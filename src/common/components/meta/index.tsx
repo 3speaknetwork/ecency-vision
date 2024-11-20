@@ -38,13 +38,6 @@ class Meta extends Component<Props> {
       rss,
       global,
     } = this.props;
-    let { image } = this.props;
-
-    if (!image) {
-      image = `${defaults.imageServer}/u/${
-        global?.hive_id ? global.hive_id : "hive-112019"
-      }/avatar/medium`;
-    }
 
     return (
       <>
@@ -138,11 +131,14 @@ class Meta extends Component<Props> {
             <link rel="alternate" type="application/rss+xml" href={rss} />
           </Helmet>
         )}
-        {image && (
-          <Helmet>
-            <meta property="og:image" content={image} />
-          </Helmet>
-        )}
+        <Helmet>
+          <meta
+            property="og:image"
+            content={`${defaults.imageServer}/u/${
+              global?.hive_id ? global.hive_id : "hive-112019"
+            }/avatar/medium`}
+          />
+        </Helmet>
       </>
     );
   }
