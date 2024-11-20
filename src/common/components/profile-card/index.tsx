@@ -252,7 +252,6 @@ export const ProfileCard = (props: Props) => {
 
             {(account.profile?.name || account.profile?.about) && (
                 <div className="basic-info">
-                    {account.profile?.name && <div className="full-name">{account.profile.name}</div>}
                     {account.profile?.about && <div className="about">{account.profile.about}</div>}
                 </div>
             )}
