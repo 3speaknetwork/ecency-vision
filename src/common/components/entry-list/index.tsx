@@ -118,9 +118,11 @@ export class EntryListContent extends Component<Props, State> {
       !entry.community
         ? true
         : !blacklist.includes(entry.author) &&
-          (entry.community === global.hive_id ||
-            entry.json_metadata.tags?.some((tag) => global.tags.includes(tag)))
-    );
+        (entry.community === global.hive_id ||
+          (entry?.json_metadata?.tags &&
+            Array.isArray(entry.json_metadata.tags) &&
+            entry.json_metadata.tags.some((tag) => global.tags.includes(tag))))
+  );
 
     let mutedList: string[] = [];
     if (

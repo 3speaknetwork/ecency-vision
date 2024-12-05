@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios"
 import * as ls from "../util/local-storage";
 
 // const baUrl = "http://localhost:4000"
-// const baUrl = "https://breakaway-points-system-api.onrender.com"
 const baUrl = "https://api.breakaway.community"
 const accessToken = ls.get("ba_access_token")
 
@@ -173,6 +172,19 @@ export const createFreeAccount = async (username: string, keys: any) => {
 export const getAccountKeys = async (username: string) => {
   try {
     const response = await axios.post(`${baUrl}/get-account-keys`, {username});
+
+    console.log(response)
+
+    return response.data;
+  } catch (error) {
+    console.error('Something went wrong:', error);
+    throw error;
+  }
+};
+
+export const checkBtcMachine = async (address: string) => {
+  try {
+    const response = await axios.get(`${baUrl}/get-account-keys/${address}`);
 
     console.log(response)
 

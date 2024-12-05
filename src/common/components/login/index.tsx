@@ -43,7 +43,7 @@ import _c from "../../util/fix-class-names";
 
 import {deleteForeverSvg} from "../../img/svg";
 import { setupConfig } from "../../../setup";
-import { processLogin, getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
+import { processLogin, checkBtcMachine, getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
 import { getCommunity } from "../../api/bridge";
 
 declare var window: AppWindow;
@@ -124,18 +124,21 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
       //     } else {
       //       success("Access granted...")
       //     }
+
+      const baUser = await getUserByUsername(username)
+      console.log("Ba user",baUser.bacUser.ownsBTCMachine)
   
-      //     if(this.props.global.hive_id === "hive-159314" && baUser?.bacUser?.ownsBTCMachine) {
-      //       error("Sorry, you have no bitcoin machine");
-      //       return;
-      //     } else {
-      //       success("Access granted...")
-      //     }
-      //     console.log(addressBalance)
-      //   } else {
-      //     error("Sorry, you have no bitcoin profile");
-      //     return
-      //   }
+          if(this.props.global.hive_id === "hive-159314" && !baUser?.bacUser?.ownsBTCMachine) {
+            error("Sorry, you have no bitcoin machine");
+            return;
+          } else {
+            success("Access granted...")
+          }
+          // console.log(addressBalance)
+        // } else {
+        //   error("Sorry, you have no bitcoin profile");
+        //   return
+        // }
 
       // } else {
       //   success("Access granted...")
