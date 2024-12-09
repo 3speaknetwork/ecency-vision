@@ -244,7 +244,7 @@ export const ProfileCard = (props: Props) => {
                 </div>
             </div> : <div className="btc-profile">
                 <span style={{fontSize: "18px"}}>No bitcoin profile added</span>
-                {activeUser.username === account.name && <a href="https://onboard.bitcoinmachines.community/add-btc-profile/" target="_blank" rel="noopener noreferrer">
+                {activeUser.username === account.name && <a href="http://localhost:3002/add-btc-profile/" target="_blank" rel="noopener noreferrer">
                     Click to add bitcoin profile
                 </a>}
             </div>) }

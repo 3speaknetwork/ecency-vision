@@ -194,3 +194,22 @@ export const checkBtcMachine = async (address: string) => {
     throw error;
   }
 };
+
+
+
+///////Btc ordinals
+export const fetchOrdinals = async (address: any) => {
+  const API_URL = `https://api.hiro.so/ordinals/v1/inscriptions?address=${address}`;
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.results;
+  } catch (error: any) {
+    console.error("Failed to fetch ordinals:", error.message);
+    return [];
+  }
+};

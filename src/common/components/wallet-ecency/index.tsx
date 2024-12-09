@@ -433,7 +433,7 @@ export const WalletEcency = (props: Props) => {
                             </div>
                         </div> */}
 
-                        <div className="balance-row alternative">
+                        <div className="balance-row alternative ml-5">
                             <div className="balance-info">
                                 <div className="title">{communityInfo?.title}</div>
                                 <div className="description">{_t("points.main-description")}</div>
@@ -489,7 +489,7 @@ export const WalletEcency = (props: Props) => {
                             </div>
                         </div>
 
-                        <div className="get-points">
+                        <div className="get-points ml-5">
                             <div className="points-types">
                                 <div className="points-types-title">{_t("points.earn-points")}</div>
                                 <div className="points-types-list">
@@ -549,14 +549,9 @@ export const WalletEcency = (props: Props) => {
                                     </Tooltip> */}
                                 </div>
                             </div>
-                            {/* {isMyPage && (
-                                <div className="buy-points">
-                                    <a href="#" onClick={togglePurchase}> {_t('points.get')}</a>
-                                </div>
-                            )} */}
                         </div>
 
-                        <div className="p-transaction-list">
+                        <div className="p-transaction-list ml-5">
                             <div className="transaction-list-header">
                                 <h2>{_t('points.history')}</h2>
                                 <FormControl as="select" value={point.filter} onChange={filterChanged}>
