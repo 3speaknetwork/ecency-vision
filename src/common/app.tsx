@@ -92,12 +92,12 @@ const App = ({ setLang }: any) => {
                 path={routes.ENTRY}
                 component={EntryContainer}
               />
-              <Route
+              {/* <Route
                 exact={true}
                 strict={true}
                 path={routes.COMMUNITIES}
                 component={CommunitiesContainer}
-              />
+              /> */}
               <Route
                 exact={true}
                 strict={true}

@@ -19,6 +19,11 @@ export enum EntryFilter {
     created = "created",
     payout = "payout",
     payout_comments = "payout_comments",
+    sats100m = "sats100m",
+    sats5000 = "sats5000",
+    sats50000 = "sats50000",
+    sats500000 = "sats500000",
+    sats50m = "sats50m",
     muted = "muted"
 }
 
@@ -37,6 +42,12 @@ export enum AllFilter {
     payout = "payout",
     payout_comments = "payout_comments",
     muted = "muted",  // To see muted accounts
+    //////NIGHT NEED TO REMOVE ALLL SATS FILTER AND FECT CREATED DYNAMICALLY
+    sats100m = "sats100m",
+    sats5000 = "sats5000",
+    sats50000 = "sats50000",
+    sats500000 = "sats500000",
+    sats50m = "sats50m",
     blog = "blog",  // This might be deleted
     posts = "posts",
     comments = "comments",

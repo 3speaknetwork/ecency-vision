@@ -35,7 +35,7 @@ import { Button } from "react-bootstrap"
 import { getAccount } from "../../api/hive"
 import { getBtcWalletBalance, getBtcTransactions } from "../../api/breakaway";
 import { Link } from "react-router-dom";
-import { fetchOrdinals } from "../../api/breakaway";
+import { fetchOrdinals, getUserByUsername } from "../../api/breakaway";
 
 export const formatMemo = (memo: string, history: History) => {
     return memo.split(" ").map(x => {
@@ -157,9 +157,11 @@ export const WalletBtc = (props: Props) => {
 
     useEffect(() => {
         /////test address
-        const bitcoinAddress = "bc1p7lhlzun2juy88t2zyxhjm98k7xlrfmnw00jjdtkakdq2wlnc697qu59p8p"
+        // const bitcoinAddress = "bc1pet95xv7gz6s8q2r2x0g3npcyyf9yn0yr9y0x2yekxyqjzuvuef4sm5rpql"
+        const bitcoinAddress = jsonMetaData?.bitcoin?.address
 
         const getOrdinals = async () => {
+    
           setLoading(true);
           const data = await fetchOrdinals(bitcoinAddress);
 
@@ -172,7 +174,7 @@ export const WalletBtc = (props: Props) => {
         };
     
         getOrdinals();
-      }, []);
+      }, [jsonMetaData]);
 
     const initiateOnElectron = (username: string) => {
         if (!isMounted && global.isElectron) {
@@ -272,7 +274,7 @@ export const WalletBtc = (props: Props) => {
                             <Button
                                 onClick={()=> setShowNfts(!showNfts)}
                             >
-                                {showNfts ? "Hide Nfts" : "Show Nfts"}
+                                {showNfts ? "Hide Ordinals" : "Show Ordinals"}
                             </Button>
                         </div>
 
@@ -281,15 +283,22 @@ export const WalletBtc = (props: Props) => {
                             ) : ordinals.length > 0 ? (
                                 (showNfts && 
                                 <div className="wallet-nft ml-5">
-                                    <h4 className="nft-title">Address Nfts</h4>
+                                    <h4 className="nft-title">Address Ordinals</h4>
                                     <div className="nft-image-wrapper">
                                     {ordinals.map((inscription: any) => (
-                                        <div key={inscription.id}>
+                                        <div key={inscription.id} className="d-flex flex-column">
                                             <img
-                                                className="nft-images"
+                                                className="nft-images mb-1"
                                                 src={`https://ordinals.com/content/${inscription.id}`}
                                                 alt="Ordinal"
                                             />
+                                            <a
+                                                className="mb-3"
+                                                href={`https://ordinals.com/inscription/${inscription.id}`} 
+                                                target="_blank"
+                                            >
+                                                See Ordinals Info
+                                            </a>
                                         </div>
                                     ))}
                                     </div>

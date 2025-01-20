@@ -39,9 +39,9 @@ export class CommunityMenu extends Component<Props> {
   }
 
   render() {
-    const { community, match } = this.props;
+    const { community, match, global } = this.props;
     const { filter, name } = match.params;
-
+    
     const menuConfig: {
       history: History;
       label: string;
@@ -49,26 +49,35 @@ export class CommunityMenu extends Component<Props> {
     } = {
       history: this.props.history,
       label:
-        filter === EntryFilter.trending
-          ? _t("community.posts")
-          : _t(`entry-filter.filter-${filter}`),
+        (filter === EntryFilter.trending)
+          ? "Community Posts"
+          : _t(`entry-filter.filter-${filter}`), // Keep for other translations
       items: [
-        ...[
-          EntryFilter.trending,
-          EntryFilter.hot,
-          EntryFilter.created,
-          EntryFilter.payout,
-          EntryFilter.muted,
-        ].map((x) => {
-          return {
-            label: _t(`entry-filter.filter-${x}`),
-            href: `/${x}/${community.name}`,
-            active: filter === x,
-          };
-        }),
-      ],
+        ...(global.hive_id === "hive-125568"
+          ? [
+              ...([{ label: "5,000stats", value: EntryFilter.created }]),
+              ...([{ label: "50,000stats", value: EntryFilter.sats50000 }]),
+              ...([{ label: "500,000sat", value: EntryFilter.sats500000 }]),
+              // ...([{ label: "0.5BTC", value: EntryFilter.trending }]),
+              ...([{ label: "0.5BTC", value: EntryFilter.trending }]),
+              ...( [{ label: "1BTC", value: EntryFilter.hot }]),
+            ]
+          : [
+              { label: "Trending", value: EntryFilter.trending },
+              { label: "Hot", value: EntryFilter.hot },
+              { label: "Created", value: EntryFilter.created },
+              { label: "Payout", value: EntryFilter.payout },
+              { label: "Muted", value: EntryFilter.muted },
+            ])
+      ].map((item) => {
+        return {
+          label: item.label, // Custom label starting with numbers
+          href: `/${item.value}/${community.name}`,
+          active: filter === item.value,
+        };
+      }),
     };
-
+    
     return (
       <div className="community-menu">
         <div className="menu-items">

@@ -47,7 +47,6 @@ export const processLogin = async (username: string, ts: string, sig: string, co
 
     const { token, ...user } = response.data.response;
 
-    console.log('Login Successful...');
     return response;
 
   } catch (error) { 
@@ -147,8 +146,6 @@ export const getUserByUsername = async (username: string) => {
   try {
     const response = await axios.get(`${baUrl}/user/${username}`);
 
-    console.log(response)
-
     return response.data;
   } catch (error) {
     console.error('Error fetching user by username:', error);
@@ -159,8 +156,6 @@ export const getUserByUsername = async (username: string) => {
 export const createFreeAccount = async (username: string, keys: any) => {
   try {
     const response = await axios.post(`${baUrl}/create-free-account`, {username, accountKeys: keys});
-
-    console.log(response)
 
     return response.data;
   } catch (error) {
@@ -173,8 +168,6 @@ export const getAccountKeys = async (username: string) => {
   try {
     const response = await axios.post(`${baUrl}/get-account-keys`, {username});
 
-    console.log(response)
-
     return response.data;
   } catch (error) {
     console.error('Something went wrong:', error);
@@ -185,8 +178,6 @@ export const getAccountKeys = async (username: string) => {
 export const checkBtcMachine = async (address: string) => {
   try {
     const response = await axios.get(`${baUrl}/get-account-keys/${address}`);
-
-    console.log(response)
 
     return response.data;
   } catch (error) {
