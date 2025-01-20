@@ -45,6 +45,7 @@ import capitalize from "../util/capitalize";
 import defaults from "../constants/defaults.json";
 import SearchBox from "../components/search-box";
 import { setupConfig } from "../../setup";
+import { ObtcListContent } from "../components/entry-list/obclub";
 
 interface MatchParams {
   filter: string;
@@ -98,7 +99,9 @@ class CommunityPage extends BaseComponent<Props, State> {
     const { match, fetchEntries } = this.props;
 
     const { filter, name } = match.params;
+    // const filt = filter === "hot" ? "hot" : filter === "trending" ? "trending" : "created"
     if (EntryFilter[filter as EntryFilter]) {
+      console.log("object...filter", filter, filter === "sats500000", EntryFilter[filter as EntryFilter], name)
       // fetch blog posts.
       fetchEntries(filter, name, false);
     }
@@ -110,6 +113,7 @@ class CommunityPage extends BaseComponent<Props, State> {
         if (r) updateSubscriptions(r);
       });
     }
+    this.getPosts()
   }
 
   componentDidUpdate(prevProps: Readonly<Props>): void {
@@ -140,6 +144,19 @@ class CommunityPage extends BaseComponent<Props, State> {
           if (r) updateSubscriptions(r);
         });
       }
+    }
+  }
+
+  //////testing for fetching new feeds to render OBTC
+  getPosts = async () => {
+    const { fetchEntries, match } = this.props;
+    const { filter, name } = match.params;
+    console.log("object.....psits")
+    try {
+      const entr = fetchEntries(filter, name, false);
+      console.log("object....entry", entr)
+    } catch (error) {
+      
     }
   }
 
@@ -367,7 +384,12 @@ class CommunityPage extends BaseComponent<Props, State> {
 
                     {(filter === "hot" ||
                       filter === "created" ||
-                      filter === "trending") &&
+                      filter === "trending"
+                      // filter === "sats50m" ||
+                      // filter === "sats500000" ||
+                      // filter === "sats50000" ||
+                      // filter === "sats5000"
+                    ) &&
                       !loading &&
                       entryList.length > 0 && (
                         <div className="searchProfile">
@@ -424,6 +446,14 @@ class CommunityPage extends BaseComponent<Props, State> {
                             community,
                             loading,
                           })}
+
+                          {/* {new ObtcListContent({
+                            ...this.props,
+                            entries: entryList,
+                            promotedEntries: promoted,
+                            community,
+                            loading,
+                          })} */}
                         </div>
                       </div>
                     )}

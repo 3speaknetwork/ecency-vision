@@ -242,7 +242,12 @@ export const ProfileCard = (props: Props) => {
                        Click to Verify signature
                     </a>
                 </div>
-            </div> : <></>) }
+            </div> : <div className="btc-profile">
+                <span style={{fontSize: "18px"}}>No bitcoin profile added</span>
+                {activeUser.username === account.name && <a href="http://localhost:3002/add-btc-profile/" target="_blank" rel="noopener noreferrer">
+                    Click to add bitcoin profile
+                </a>}
+            </div>) }
 
             {loggedIn && !isMyProfile && 
             <div className="d-flex justify-content-center mb-3 d-md-block">

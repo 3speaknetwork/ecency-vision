@@ -144,20 +144,20 @@ export const fetchEntries = (what: string = "", tag: string = "", more: boolean 
 
     const groupKey = makeGroupKey(what, tag);
 
-    const theEntries = entries[groupKey].entries;
+    const theEntries = entries[groupKey]?.entries;
 
-    if (!more && theEntries.length > 0) {
+    if (!more && theEntries?.length > 0) {
         return;
     }
 
-    const lastEntry = theEntries[theEntries.length - 1];
+    const lastEntry = theEntries ? theEntries![theEntries?.length - 1] : null;
 
     let start_author = "";
     let start_permlink = "";
 
     if (lastEntry) {
-        start_author = lastEntry.author;
-        start_permlink = lastEntry.permlink;
+        start_author = lastEntry?.author;
+        start_permlink = lastEntry?.permlink;
     }
 
     dispatch(fetchAct(groupKey));

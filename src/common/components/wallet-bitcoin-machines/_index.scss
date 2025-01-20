@@ -281,3 +281,35 @@
   align-items: center;
   width: 100%;
 }
+
+.btc-trx{
+  margin-left: 30px !important;
+}
+
+.toggle-nft{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.wallet-nft{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  .nft-title{
+    text-align: center;
+  }
+  
+  .nft-image-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .nft-images{
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+  }
+  
+  }
+}
+

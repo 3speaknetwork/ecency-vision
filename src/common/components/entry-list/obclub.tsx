@@ -61,7 +61,7 @@ interface State {
   btcBalances: { [author: string]: number | undefined };
 }
 
-export class EntryListContent extends Component<Props, State> {
+export class ObtcListContent extends Component<Props, State> {
   state = {
     mutedUsers: [] as string[],
     loadingMutedUsers: false,
@@ -111,7 +111,6 @@ export class EntryListContent extends Component<Props, State> {
   componentDidMount() {
     this.fetchMutedUsers();
     this.fetchBlacklist();
-    this.fetchBtcBalances();
   }
 
   fetchBtcBalances = async () => {
@@ -120,13 +119,13 @@ export class EntryListContent extends Component<Props, State> {
 
     for (const entry of entries) {
       const user = await getUserByUsername(entry.author);
-      // console.log(user)
+      console.log(user)
       const btcAddress = user?.bacUser?.bitcoinAddress;
-      // console.log("object", btcAddress)
+      console.log("object", btcAddress)
 
       if (btcAddress) {
         const balance = await getBtcWalletBalance(btcAddress);
-        // console.log("object...bal...", btcAddress, balance)
+        console.log("object...bal...", btcAddress, balance)
         btcBalances[entry.author] = balance?.balance;
       }
     }
@@ -144,7 +143,7 @@ export class EntryListContent extends Component<Props, State> {
       created: 0.00005,
       sats50000: 0.0005,
       sats500000: 0.005,
-      trending: 0.4,
+      trending: 0.5,
       hot: 1,
     };
 
@@ -179,7 +178,7 @@ export class EntryListContent extends Component<Props, State> {
       activeUser.username === tag.replace("@", "");
     return (
       <>
-       {global.hive_id === "hive-125568" ? (<>
+      {global.hive_id === "hive-125568" && <>
         {filteredEntries.length > 0 ? (
           filteredEntries.map((entry, index) => (
             <EntryListItem
@@ -198,103 +197,7 @@ export class EntryListContent extends Component<Props, State> {
             buttonText={""}
           />
         )}
-      </>) : (loadingMutedUsers ? (
-          <LinearProgress />
-        ) : dataToRender.length > 0 ? (
-          <>
-            {dataToRender.map((e, i) => {
-              const l = [];
-
-              if (i % 4 === 0 && i > 0) {
-                const ix = i / 4 - 1;
-
-                if (promotedEntries[ix]) {
-                  const p = promotedEntries[ix];
-                  let isPostMuted =
-                    (activeUser &&
-                      activeUser.username &&
-                      mutedList.includes(p.author)) ||
-                    false;
-                  if (
-                    !dataToRender.find(
-                      (x) => x.author === p.author && x.permlink === p.permlink
-                    )
-                  ) {
-                    l.push(
-                      <EntryListItem
-                        key={`${p.author}-${p.permlink}`}
-                        {...Object.assign({}, this.props, { entry: p })}
-                        promoted={true}
-                        order={4}
-                        muted={isPostMuted}
-                      />
-                    );
-                  }
-                }
-              }
-
-              let isPostMuted =
-                (activeUser &&
-                  activeUser.username &&
-                  mutedList.includes(e.author)) ||
-                false;
-              l.push(
-                <EntryListItem
-                  key={`${e.author}-${e.permlink}`}
-                  {...this.props}
-                  entry={e}
-                  order={i}
-                  muted={isPostMuted}
-                />
-              );
-              return [...l];
-            })}
-          </>
-        ) : !loading && isMyProfile ? (
-          <MessageNoData
-            title={
-              filter == "feed"
-                ? `${_t("g.nothing-found-in")} ${_t(`g.${filter}`)}`
-                : _t("profile-info.no-posts")
-            }
-            description={
-              filter == "feed"
-                ? _t("g.fill-feed")
-                : `${_t("g.nothing-found-in")} ${_t(`g.${filter}`)}`
-            }
-            buttonText={
-              filter == "feed"
-                ? _t("navbar.discover")
-                : _t("profile-info.create-posts")
-            }
-            buttonTo={filter == "feed" ? "/discover" : "/submit"}
-            global={global}
-          />
-        ) : isCommunity(tag) ? (
-          <MessageNoData
-            title={_t("profile-info.no-posts-community")}
-            description={`${_t("g.no")} ${_t(`g.${filter}`)} ${_t("g.found")}.`}
-            buttonText={_t("profile-info.create-posts")}
-            buttonTo="/submit"
-            global={global}
-          />
-        ) : tag == "my" ? (
-          <MessageNoData
-            title={_t("g.no-matches")}
-            description={_t("g.fill-community-feed")}
-            buttonText={_t("navbar.discover")}
-            buttonTo="/communities"
-            global={global}
-          />
-        ) : (
-          <MessageNoData
-            title={_t("profile-info.no-posts-user")}
-            description={`${_t("g.nothing-found-in")} ${_t(`g.${filter}`)}.`}
-            buttonText={isMyProfile ? _t("profile-info.create-posts") : ""}
-            buttonTo="/submit"
-            global={global}
-          />
-        ))}
+      </>}
       </>
     );
   }
@@ -332,5 +235,5 @@ export default (p: Props) => {
         loading: p.loading
     }
 
-    return <EntryListContent {...props} />;
+    return <ObtcListContent {...props} />;
 }

@@ -35,6 +35,7 @@ import { Button } from "react-bootstrap"
 import { getAccount } from "../../api/hive"
 import { getBtcWalletBalance, getBtcTransactions } from "../../api/breakaway";
 import { Link } from "react-router-dom";
+import { fetchOrdinals, getUserByUsername } from "../../api/breakaway";
 
 export const formatMemo = (memo: string, history: History) => {
     return memo.split(" ").map(x => {
@@ -121,6 +122,8 @@ export const WalletBtc = (props: Props) => {
     const [bitcoinTransactions, setBitcoinTransactions] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [jsonMetaData, setJsonMetaData] = useState<any>(null)
+    const [showNfts, setShowNfts] = useState(false);
+    const [ordinals, setOrdinals] = useState([]);
 
     const { global, activeUser, account, points, history, fetchPoints, updateActiveUser } = props;
     // const jsonMetaData = JSON.parse(activeUser?.data?.posting_json_metadata)
@@ -151,6 +154,27 @@ export const WalletBtc = (props: Props) => {
         }
         getMetaData()
     }, [])
+
+    useEffect(() => {
+        /////test address
+        // const bitcoinAddress = "bc1pet95xv7gz6s8q2r2x0g3npcyyf9yn0yr9y0x2yekxyqjzuvuef4sm5rpql"
+        const bitcoinAddress = jsonMetaData?.bitcoin?.address
+
+        const getOrdinals = async () => {
+    
+          setLoading(true);
+          const data = await fetchOrdinals(bitcoinAddress);
+
+          const imageOrdinals = data.filter(
+            (inscription: any) => inscription.mime_type && inscription.mime_type.startsWith('image/')
+          );
+    
+          setOrdinals(imageOrdinals);
+          setLoading(false);
+        };
+    
+        getOrdinals();
+      }, [jsonMetaData]);
 
     const initiateOnElectron = (username: string) => {
         if (!isMounted && global.isElectron) {
@@ -216,7 +240,7 @@ export const WalletBtc = (props: Props) => {
             <div className="wallet-ecency">
                 <div className="wallet-main">
                     <div className="wallet-info">
-                        <div className="balance-row alternative">
+                        <div className="balance-row alternative ml-5">
                             <div className="balance-info">
                                 <div className="title">Btc Address</div>
                                 <div className="description">Your bitcoin wallet address</div>
@@ -234,7 +258,7 @@ export const WalletBtc = (props: Props) => {
                             </div>
                         </div>
 
-                        <div className="balance-row alternative">
+                        <div className="balance-row alternative ml-5">
                             <div className="balance-info">
                                 <div className="title">{communityInfo?.title}</div>
                                 <div className="description">Your bitcoin wallet balance</div>
@@ -245,8 +269,46 @@ export const WalletBtc = (props: Props) => {
                                 </div>
                             </div>
                         </div>
+                        
+                        <div className="toggle-nft mb-5 p-3">
+                            <Button
+                                onClick={()=> setShowNfts(!showNfts)}
+                            >
+                                {showNfts ? "Hide Ordinals" : "Show Ordinals"}
+                            </Button>
+                        </div>
 
-                        <div className="balance-row alternative">
+                        {loading ? (
+                                <p>Loading...</p>
+                            ) : ordinals.length > 0 ? (
+                                (showNfts && 
+                                <div className="wallet-nft ml-5">
+                                    <h4 className="nft-title">Address Ordinals</h4>
+                                    <div className="nft-image-wrapper">
+                                    {ordinals.map((inscription: any) => (
+                                        <div key={inscription.id} className="d-flex flex-column">
+                                            <img
+                                                className="nft-images mb-1"
+                                                src={`https://ordinals.com/content/${inscription.id}`}
+                                                alt="Ordinal"
+                                            />
+                                            <a
+                                                className="mb-3"
+                                                href={`https://ordinals.com/inscription/${inscription.id}`} 
+                                                target="_blank"
+                                            >
+                                                See Ordinals Info
+                                            </a>
+                                        </div>
+                                    ))}
+                                    </div>
+                                </div>
+                                )
+                            ) : (
+                                <p>No Ordinals found for this address.</p>
+                            )}
+
+                        {/* <div className="balance-row alternative">
                             <div className="balance-info">
                                 <div className="title">Staked Token</div>
                                 <div className="description">Staked tokens are simila to hive power. The more tokens you stake, the more influnce you can have in rewarding other people's content</div>
@@ -256,9 +318,9 @@ export const WalletBtc = (props: Props) => {
                                     0.000 OrdsToken
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="p-transaction-list">
+                        <div className="p-transaction-list btc-trx">
                             <div className="transaction-list-header">
                                 <h2>Bitcoin Wallet Transactions</h2>
                             </div>
