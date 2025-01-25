@@ -406,6 +406,8 @@ export class Login extends BaseComponent<LoginProps, State> {
   userSelect = (user: User) => {
     const { doLogin } = this.props;
 
+    ////check if user has btc machine
+
     this.stateSet({ inProgress: true });
 
     getAccount(user.username)

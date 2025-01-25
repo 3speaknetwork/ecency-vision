@@ -228,6 +228,10 @@ export const ProfileCard = (props: Props) => {
                     <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.address)}>{formatString(jsonMetaData?.bitcoin.address)}{copyContent}</span>
                 </div>
                 <div className="btc-info">
+                    <span>Ordinals:</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.ordinalAddress)}>{formatString(jsonMetaData?.bitcoin?.ordinalAddress)}{copyContent}</span>
+                </div>
+                <div className="btc-info">
                     <span>Btc Balance:</span>
                     <span className="b-info">{btcBalance?.toFixed(2)}</span>
                 </div>
@@ -244,7 +248,7 @@ export const ProfileCard = (props: Props) => {
                 </div>
             </div> : <div className="btc-profile">
                 <span style={{fontSize: "18px"}}>No bitcoin profile added</span>
-                {activeUser.username === account.name && <a href="http://localhost:3002/add-btc-profile/" target="_blank" rel="noopener noreferrer">
+                {activeUser.username === account.name && <a href="https://onboard.bitcoinmachines.community/add-btc-profile" target="_blank" rel="noopener noreferrer">
                     Click to add bitcoin profile
                 </a>}
             </div>) }
