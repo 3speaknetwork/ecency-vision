@@ -158,7 +158,7 @@ export const WalletBtc = (props: Props) => {
     useEffect(() => {
         /////test address
         // const bitcoinAddress = "bc1pet95xv7gz6s8q2r2x0g3npcyyf9yn0yr9y0x2yekxyqjzuvuef4sm5rpql"
-        const bitcoinAddress = jsonMetaData?.bitcoin?.address
+        const bitcoinAddress = jsonMetaData?.bitcoin?.ordinalAddress
 
         const getOrdinals = async () => {
     
