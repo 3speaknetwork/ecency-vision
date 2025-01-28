@@ -191,7 +191,7 @@ export class ObtcListContent extends Component<Props, State> {
         ) : (
           <MessageNoData
             title={_t("g.no-matches")}
-            description={_t("g.no-data")}
+            description={_t("g.no-matches")}
             global={global}
             buttonTo={""}
             buttonText={""}

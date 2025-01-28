@@ -126,7 +126,6 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
       //     }
 
       const baUser = await getUserByUsername(username)
-      console.log("Ba user",baUser.bacUser.ownsBTCMachine)
   
           if(this.props.global.hive_id === "hive-159314" && !baUser?.bacUser?.ownsBTCMachine) {
             error("Sorry, you have no bitcoin machine");
@@ -134,15 +133,6 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
           } else {
             success("Access granted...")
           }
-          // console.log(addressBalance)
-        // } else {
-        //   error("Sorry, you have no bitcoin profile");
-        //   return
-        // }
-
-      // } else {
-      //   success("Access granted...")
-      // }
   
       // return;
       account = await getAccount(username);
@@ -180,8 +170,8 @@ export class LoginKc extends BaseComponent<LoginKcProps, LoginKcState> {
 
     const signer = async (message: string): Promise<string> =>  {
       const ts: any = Date.now();
-      const sign = await signBuffer(username, message, "Active").then((r) => r.result);
-      const signBa = await signBuffer(username, `${username}${ts}`, "Active").then((r) => r.result);
+      const sign = await signBuffer(username, message, "Posting").then((r) => r.result);
+      const signBa = await signBuffer(username, `${username}${ts}`, "Posting").then((r) => r.result);
       if (sign) {
         // Should login to community dynamically
         const login = await processLogin(username, ts, signBa, community.title);
@@ -493,25 +483,162 @@ export class Login extends BaseComponent<LoginProps, State> {
     toggleUIProp("loginKc");
   };
 
+  ///incase we later need login with active key, just keep this
+  // loginActiveIncluded = async () => {
+  //   const { username, key } = this.state;
+
+  //   if (username === "" || key === "") {
+  //     error(_t("login.error-fields-required"));
+  //     return;
+  //   }
+
+  //   // Warn if the code is a public key
+  //   try {
+  //     PublicKey.fromString(key);
+  //     error(_t("login.error-public-key"));
+  //     return;
+  //   } catch (e) {}
+
+  //   let account: Account;
+
+  //   this.stateSet({ inProgress: true });
+
+  //   try {
+  //     account = await getAccount(username);
+  //   } catch (err) {
+  //     error(_t("login.error-user-fetch"));
+  //     return;
+  //   } finally {
+  //     this.stateSet({ inProgress: false });
+  //   }
+
+  //   if (!(account && account.name === username)) {
+  //     error(_t("login.error-user-not-found"));
+  //     return;
+  //   }
+
+  //   // Posting public key of the account
+  //   const postingPublic = account?.posting!.key_auths.map((x) => x[0]);
+
+  //   const isPlainPassword = !cryptoUtils.isWif(key);
+
+  //   let thePrivateKey: PrivateKey;
+
+  //   // Whether using posting private key to login
+  //   let withPostingKey = false;
+
+  //   if (
+  //     !isPlainPassword &&
+  //     postingPublic.includes(
+  //       PrivateKey.fromString(key).createPublic().toString()
+  //     )
+  //   ) {
+  //     // Login with posting private key
+  //     withPostingKey = true;
+  //     thePrivateKey = PrivateKey.fromString(key);
+  //   } else {
+  //     // Login with master or active private key
+  //     // Get active private key from user entered code
+  //     if (isPlainPassword) {
+  //       thePrivateKey = PrivateKey.fromLogin(account.name, key, "active");
+  //     } else {
+  //       thePrivateKey = PrivateKey.fromString(key);
+  //     }
+
+  //     // Generate public key from the private key
+  //     const activePublicInput = thePrivateKey.createPublic().toString();
+
+  //     // Active public key of the account
+  //     const activePublic = account?.active!.key_auths.map((x) => x[0]);
+
+  //     // Compare keys
+  //     if (!activePublic.includes(activePublicInput)) {
+  //       error(_t("login.error-authenticate")); // enter master or active key
+  //       return;
+  //     }
+
+  //     const hasPostingPerm =
+  //       account?.posting!.account_auths.filter((x) => x[0] === "ecency.app")
+  //         .length > 0;
+
+  //     if (!hasPostingPerm) {
+  //       this.stateSet({ inProgress: true });
+  //       try {
+  //         await grantPostingPermission(thePrivateKey, account, "ecency.app");
+  //       } catch (err) {
+  //         error(_t("login.error-permission"));
+  //         return;
+  //       } finally {
+  //         this.stateSet({ inProgress: false });
+  //       }
+  //     }
+  //   }
+
+  //   // Prepare hivesigner code
+  //   const signer = (message: string): Promise<string> => {
+  //     const hash = cryptoUtils.sha256(message);
+  //     return new Promise<string>((resolve) =>
+  //       resolve(thePrivateKey.sign(hash).toString())
+  //     );
+  //   };
+  //   const code = await makeHsCode(account.name, signer);
+
+  //   this.stateSet({ inProgress: true });
+
+  //   const { doLogin } = this.props;
+
+  //   doLogin(code, withPostingKey ? key : null, account)
+  //     .then(() => {
+  //       if (
+  //         !ls.get(`${username}HadTutorial`) ||
+  //         (ls.get(`${username}HadTutorial`) &&
+  //           ls.get(`${username}HadTutorial`) !== "true")
+  //       ) {
+  //         ls.set(`${username}HadTutorial`, "false");
+  //       }
+
+  //       let shouldShowTutorialJourney = ls.get(`${username}HadTutorial`);
+
+  //       if (
+  //         !shouldShowTutorialJourney &&
+  //         shouldShowTutorialJourney &&
+  //         shouldShowTutorialJourney === "false"
+  //       ) {
+  //         ls.set(`${username}HadTutorial`, "false");
+  //       }
+  //       this.hide();
+  //     })
+  //     .catch(() => {
+  //       error(_t("g.server-error"));
+  //     })
+  //     .finally(() => {
+  //       this.stateSet({ inProgress: false });
+  //     });
+  // };
+
+  ///this works for only posting key login
+  
   login = async () => {
     const { username, key } = this.state;
-
+  
     if (username === "" || key === "") {
       error(_t("login.error-fields-required"));
       return;
     }
-
+  
     // Warn if the code is a public key
     try {
       PublicKey.fromString(key);
       error(_t("login.error-public-key"));
       return;
-    } catch (e) {}
-
-    let account: Account;
-
+    } catch (e) {
+      // Continue if it's not a public key
+    }
+  
+    let account;
+  
     this.stateSet({ inProgress: true });
-
+  
     try {
       account = await getAccount(username);
     } catch (err) {
@@ -520,83 +647,45 @@ export class Login extends BaseComponent<LoginProps, State> {
     } finally {
       this.stateSet({ inProgress: false });
     }
-
+  
     if (!(account && account.name === username)) {
       error(_t("login.error-user-not-found"));
       return;
     }
-
-    // Posting public key of the account
-    const postingPublic = account?.posting!.key_auths.map((x) => x[0]);
-
-    const isPlainPassword = !cryptoUtils.isWif(key);
-
-    let thePrivateKey: PrivateKey;
-
-    // Whether using posting private key to login
-    let withPostingKey = false;
-
-    if (
-      !isPlainPassword &&
-      postingPublic.includes(
-        PrivateKey.fromString(key).createPublic().toString()
-      )
-    ) {
-      // Login with posting private key
-      withPostingKey = true;
-      thePrivateKey = PrivateKey.fromString(key);
-    } else {
-      // Login with master or active private key
-      // Get active private key from user entered code
-      if (isPlainPassword) {
-        thePrivateKey = PrivateKey.fromLogin(account.name, key, "active");
-      } else {
-        thePrivateKey = PrivateKey.fromString(key);
-      }
-
-      // Generate public key from the private key
-      const activePublicInput = thePrivateKey.createPublic().toString();
-
-      // Active public key of the account
-      const activePublic = account?.active!.key_auths.map((x) => x[0]);
-
-      // Compare keys
-      if (!activePublic.includes(activePublicInput)) {
-        error(_t("login.error-authenticate")); // enter master or active key
+  
+    // Fetch posting public keys from the account
+    const postingPublicKeys = account.posting.key_auths.map((x) => x[0]);
+  
+    // Ensure the provided key is a valid private key for the posting authority
+    let postingPrivateKey: any;
+    try {
+      const privateKey = PrivateKey.fromString(key);
+      const generatedPublicKey = privateKey.createPublic().toString();
+  
+      if (!postingPublicKeys.includes(generatedPublicKey)) {
+        error(_t("Only posting key is required")); // Invalid posting key
         return;
       }
-
-      const hasPostingPerm =
-        account?.posting!.account_auths.filter((x) => x[0] === "ecency.app")
-          .length > 0;
-
-      if (!hasPostingPerm) {
-        this.stateSet({ inProgress: true });
-        try {
-          await grantPostingPermission(thePrivateKey, account, "ecency.app");
-        } catch (err) {
-          error(_t("login.error-permission"));
-          return;
-        } finally {
-          this.stateSet({ inProgress: false });
-        }
-      }
+  
+      postingPrivateKey = privateKey;
+    } catch (err) {
+      error(_t("Incorrect key"));
+      return;
     }
-
+  
     // Prepare hivesigner code
-    const signer = (message: string): Promise<string> => {
+    const signer = (message: string | Buffer) => {
       const hash = cryptoUtils.sha256(message);
-      return new Promise<string>((resolve) =>
-        resolve(thePrivateKey.sign(hash).toString())
-      );
+      return Promise.resolve(postingPrivateKey.sign(hash).toString());
     };
+  
     const code = await makeHsCode(account.name, signer);
-
+  
     this.stateSet({ inProgress: true });
-
+  
     const { doLogin } = this.props;
-
-    doLogin(code, withPostingKey ? key : null, account)
+  
+    doLogin(code, key, account)
       .then(() => {
         if (
           !ls.get(`${username}HadTutorial`) ||
@@ -605,9 +694,9 @@ export class Login extends BaseComponent<LoginProps, State> {
         ) {
           ls.set(`${username}HadTutorial`, "false");
         }
-
+  
         let shouldShowTutorialJourney = ls.get(`${username}HadTutorial`);
-
+  
         if (
           !shouldShowTutorialJourney &&
           shouldShowTutorialJourney &&

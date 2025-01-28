@@ -21,17 +21,39 @@ export const handshake = (): Promise<TxResponse | void> =>
     });
 
 
-export const signBuffer = (account: string, message: string, key: AuthorityTypes, rpc: string | null = null): Promise<TxResponse> =>
+// export const signBuffer = (account: string, message: string, key: AuthorityTypes, rpc: string | null = null): Promise<TxResponse> =>
+//     new Promise<TxResponse>((resolve, reject) => {
+//         window.hive_keychain?.requestSignBuffer(account, message, "Active", (resp) => {
+//             if (!resp.success) {
+//                 reject({message: "Operation cancelled"});
+//             }
+
+//             resolve(resp);
+//         }, rpc);
+//     });
+
+///this allows either posting or active key
+export const signBuffer = (
+    account: string,
+    message: string,
+    authType: AuthorityTypes = "Active",
+    rpc: string | null = null
+  ): Promise<TxResponse> =>
     new Promise<TxResponse>((resolve, reject) => {
-        window.hive_keychain?.requestSignBuffer(account, message, "Active", (resp) => {
-            if (!resp.success) {
-                reject({message: "Operation cancelled"});
-            }
-
-            resolve(resp);
-        }, rpc);
+      window.hive_keychain?.requestSignBuffer(
+        account,
+        message,
+        authType,
+        (resp) => {
+          if (!resp.success) {
+            reject({ message: "Operation cancelled" });
+          }
+  
+          resolve(resp);
+        },
+        rpc
+      );
     });
-
 
 export const addAccountAuthority = (account: string, authorizedUsername: string, role: AuthorityTypes, weight: number, rpc: string | null = null): Promise<TxResponse> =>
     new Promise<TxResponse>((resolve, reject) => {
