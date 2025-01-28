@@ -69,7 +69,8 @@ export const ProfileCard = (props: Props) => {
     const [followsActiveUserLoading, setFollowsActiveUserLoading] = useState(false);
     const [rcPercent, setRcPercent] = useState(100);
     const [jsonMetaData, setJsonMetaData] = useState<any>(null)
-    const [btcBalance, setBtcBalance] = useState<any>(0.00)
+    const [btcBalance, setBtcBalance] = useState<any>(0.000);
+    const [loading, setLoading] = useState(false)
     
     const [, updateState] = useState();
     const forceUpdate = useCallback(() => updateState({} as any), []);
@@ -101,7 +102,7 @@ export const ProfileCard = (props: Props) => {
 
     useEffect(()=> {
         getBtcBal()
-    },[])
+    },[account])
 
     useEffect(() => {
         setFollowersList(false);
@@ -112,7 +113,7 @@ export const ProfileCard = (props: Props) => {
 
     useEffect(() => {
         const getMetaData = () => {
-            console.log(account)
+
             try {
                 const metaData = JSON.parse(account?.posting_json_metadata);
                 setJsonMetaData(metaData)
@@ -144,17 +145,23 @@ export const ProfileCard = (props: Props) => {
     };
 
     const getBtcBal = async () => {
-        const { activeUser }  = props
+        setLoading(true)
+        
         try {
-          const baUser = await getUserByUsername(activeUser!.username)
-      
-            if(baUser?.bacUser?.bitcoinAddress) {
-              const btcAddress = baUser?.bacUser?.bitcoinAddress
-              const addressBalance = await getBtcWalletBalance(btcAddress);
-              setBtcBalance(addressBalance?.balance)
-             
+            if(account) {
+
+                const baUser = await getUserByUsername(account!?.name)
+            
+                  if(baUser?.bacUser?.bitcoinAddress) {
+                    const btcAddress = baUser?.bacUser?.bitcoinAddress
+                    const addressBalance = await getBtcWalletBalance(btcAddress);
+                    setBtcBalance(addressBalance?.balance)
+                   
+                  }
+                  setLoading(false)
             }
         } catch (error) {
+          setLoading(false)
           console.log(error)
         }
       }
@@ -164,11 +171,11 @@ export const ProfileCard = (props: Props) => {
     if (!account.__loaded) {
         return <div className="profile-card">
             <div className="profile-avatar">
-                {UserAvatar({...props, username: account.name, size: "xLarge"})}
+                {UserAvatar({...props, username: account!?.name, size: "xLarge"})}
             </div>
 
             <h1>
-                <div className="username">{account.name}</div>
+                <div className="username">{account!?.name}</div>
             </h1>
         </div>
     }
@@ -187,7 +194,7 @@ export const ProfileCard = (props: Props) => {
 
     const vPower = votingPower(account);
 
-    const isMyProfile = activeUser && activeUser.username === account.name && activeUser.data.__loaded && activeUser.data.profile;
+    const isMyProfile = activeUser && activeUser.username === account?.name && activeUser.data.__loaded && activeUser.data.profile;
     const isSettings = section === 'settings';
 
     return (
@@ -225,30 +232,35 @@ export const ProfileCard = (props: Props) => {
                 <h5>BTC info</h5>
                 <div className="btc-info">
                     <span>Address:</span>
-                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.address)}>{formatString(jsonMetaData?.bitcoin.address)}{copyContent}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.address)}>{formatString(jsonMetaData?.bitcoin?.address)}{copyContent}</span>
                 </div>
                 <div className="btc-info">
-                    <span>Ordinals:</span>
-                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.ordinalAddress)}>{formatString(jsonMetaData?.bitcoin?.ordinalAddress)}{copyContent}</span>
+                    {jsonMetaData?.bitcoin?.ordinalAddress && <>
+                        <span>Ordinals:</span>
+                        <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.ordinalAddress)}>
+                            {formatString(jsonMetaData?.bitcoin?.ordinalAddress)}{copyContent}
+                        </span>
+                    </>}
                 </div>
                 <div className="btc-info">
                     <span>Btc Balance:</span>
-                    <span className="b-info">{btcBalance?.toFixed(2)}</span>
+                    <span className="b-info">{loading  ? "fetching balance..." : btcBalance?.toFixed(7)}</span>
                 </div>
                 <div className="btc-info">
                     <span>Message:</span>
-                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.message)}>{jsonMetaData?.bitcoin.message}{copyContent}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.message)}>{jsonMetaData?.bitcoin?.message}{copyContent}</span>
                 </div>
                 <div className="btc-info">
                     <span>Signature:</span>
-                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.signature)}>{formatString(jsonMetaData?.bitcoin.signature)}{copyContent}</span>
+                    <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.signature)}>{formatString(jsonMetaData?.bitcoin?.signature)}{copyContent}</span>
                     <a href="https://www.verifybitcoinmessage.com/" target="_blank" rel="noopener noreferrer">
                        Click to Verify signature
                     </a>
                 </div>
-            </div> : <div className="btc-profile">
+            </div> 
+            : <div className="btc-profile">
                 <span style={{fontSize: "18px"}}>No bitcoin profile added</span>
-                {activeUser.username === account.name && <a href="https://onboard.bitcoinmachines.community/add-btc-profile" target="_blank" rel="noopener noreferrer">
+                {activeUser?.username === account?.name && <a href="https://onboard.bitcoinmachines.community/add-btc-profile" target="_blank" rel="noopener noreferrer">
                     Click to add bitcoin profile
                 </a>}
             </div>) }
