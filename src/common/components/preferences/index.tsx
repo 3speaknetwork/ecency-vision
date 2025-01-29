@@ -103,7 +103,7 @@ export class Preferences extends BaseComponent<Props, State> {
         const { inProgress } = this.state;
 
         return <>
-            <div className="preferences">
+            <div className="preferences ml-4">
                 <div className="preferences-header">{_t('preferences.title')}</div>
 
                 <Form.Row>

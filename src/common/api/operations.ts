@@ -964,25 +964,90 @@ export const communityRewardsRegisterKc = (name: string) => {
     return keychain.customJson(name, "ecency_registration", "Active", json, "Community Registration");
 }
 
-export const updateProfile = (account: Account, newProfile: {
-    name: string,
-    about: string,
-    website: string,
-    location: string,
-    cover_image: string,
-    profile_image: string,
-}): Promise<TransactionConfirmation> => {
-    const params = {
-        account: account.name,
-        json_metadata: '',
-        posting_json_metadata: JSON.stringify({profile: {...newProfile, version: 2}}),
-        extensions: []
-    };
+// export const updateProfile = (account: Account, newProfile: {
+//     name: string,
+//     about: string,
+//     website: string,
+//     location: string,
+//     cover_image: string,
+//     profile_image: string,
+// }): Promise<TransactionConfirmation> => {
+//     const params = {
+//         account: account.name,
+//         json_metadata: '',
+//         posting_json_metadata: JSON.stringify({profile: {...newProfile, version: 2}}),
+//         extensions: []
+//     };
 
-    const opArray: Operation[] = [["account_update2", params]];
+//     const opArray: Operation[] = [["account_update2", params]];
 
-    return broadcastPostingOperations(account.name, opArray);
-}
+//     return broadcastPostingOperations(account.name, opArray);
+// }
+
+export const updateProfile = (
+    account: Account | any,
+    newProfile: {
+        name: string;
+        about: string;
+        website: string;
+        location: string;
+        cover_image: string;
+        profile_image: string;
+        btcLightningAddress: string | any;
+    }
+): Promise<TransactionConfirmation> => {
+    try {
+        if (!account || typeof account.name !== 'string') {
+            return Promise.reject(new Error('Invalid account object provided.'));
+        }
+
+        // Parse posting_json_metadata
+        let metadata: any;
+        try {
+            metadata = JSON.parse(account.posting_json_metadata || '{}');
+        } catch (error) {
+            console.error('Error parsing posting_json_metadata:', error);
+            metadata = {}; // Default to an empty object
+        }
+
+        const {
+            name,
+            about,
+            website,
+            location,
+            cover_image,
+            profile_image,
+            btcLightningAddress,
+        } = newProfile;
+
+        // Update metadata
+        metadata.profile = {
+            ...metadata.profile,
+            name,
+            about,
+            website,
+            location,
+            cover_image,
+            profile_image,
+            btcLightningAddress,
+        };
+
+        //params
+        const params = {
+            account: account.name,
+            json_metadata: '',
+            posting_json_metadata: JSON.stringify(metadata),
+            extensions: [],
+        };
+
+        const opArray: Operation[] = [['account_update2', params]];
+
+        return broadcastPostingOperations(account.name, opArray);
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        return Promise.reject(error);
+    }
+};
 
 export const grantPostingPermission = (key: PrivateKey, account: Account, pAccount: string) => {
     if (!account.__loaded) {

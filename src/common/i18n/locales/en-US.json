@@ -648,6 +648,7 @@
     "profile-image": "Profile Image",
     "website": "Website",
     "location": "Location",
+    "lightning": "Btc Lightning Address",
     "copied": "Referral link copied to clipboard",
     "updated": "Profile updated successfully!"
   },
