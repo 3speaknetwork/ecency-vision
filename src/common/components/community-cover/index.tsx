@@ -82,6 +82,7 @@ class EditCoverImage extends BaseComponent<
       profile_image: profile?.profile_image || "",
       website: profile?.website || "",
       location: profile?.location || "",
+      btcLightningAddress: profile?.btcLightningAddress || "",
     };
 
     updateProfile(account, newProfile)

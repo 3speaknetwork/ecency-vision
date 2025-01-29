@@ -78,6 +78,7 @@ export class EditPic extends BaseComponent<EditPicProps, EditPicState> {
             profile_image: url,
             website: profile?.website || '',
             location: profile?.location || '',
+            btcLightningAddress: profile?.btcLightningAddress || '',
         };
 
         updateProfile(account, newProfile).then(r => {
