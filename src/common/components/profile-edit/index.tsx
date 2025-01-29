@@ -13,6 +13,7 @@ import {_t} from "../../i18n";
 
 import {updateProfile} from "../../api/operations";
 import {getAccount} from "../../api/hive";
+import { copyContent } from "../../img/svg";
 
 interface Props {
     activeUser: ActiveUser;
@@ -28,6 +29,7 @@ interface State {
     location: string,
     coverImage: string,
     profileImage: string,
+    btcLightningAddress: string,
     inProgress: boolean,
     uploading: boolean,
     changed: boolean
@@ -35,7 +37,7 @@ interface State {
 
 const pureState = (props: Props): State => {
     const profile = (props.activeUser.data.__loaded && props.activeUser.data.profile) ? props.activeUser.data.profile : {};
-
+    console.log(profile)
     return {
         uploading: false,
         inProgress: false,
@@ -46,6 +48,7 @@ const pureState = (props: Props): State => {
         location: profile.location || "",
         coverImage: profile.cover_image || "",
         profileImage: profile.profile_image || "",
+        btcLightningAddress: profile.btcLightningAddress || "",
     }
 }
 
@@ -79,7 +82,8 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
             location,
             website,
             coverImage,
-            profileImage
+            profileImage,
+            btcLightningAddress
         } = this.state;
 
         const newProfile = {
@@ -88,7 +92,8 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
             cover_image: coverImage,
             profile_image: profileImage,
             website,
-            location
+            location,
+            btcLightningAddress
         };
 
         this.stateSet({inProgress: true});
@@ -107,6 +112,16 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
         });
     }
 
+    copyToClipboard = (text: string) => {
+        const textField = document.createElement('textarea');
+        textField.innerText = text;
+        document.body.appendChild(textField);
+        textField.select();
+        document.execCommand('copy');
+        textField.remove();
+        success(_t('profile-edit.copied'));
+    }
+
     render() {
         const {
             name,
@@ -115,6 +130,7 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
             location,
             coverImage,
             profileImage,
+            btcLightningAddress,
             inProgress,
             uploading,
             changed
@@ -122,7 +138,7 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
 
         const spinner = <Spinner animation="grow" variant="light" size="sm" style={{marginRight: "6px"}}/>;
 
-        return <div className="profile-edit">
+        return <div className="profile-edit ml-4">
             <div className="profile-edit-header">{_t('profile-edit.title')}</div>
             <Form.Row>
                 <Col lg={6} xl={4}>
@@ -185,6 +201,35 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
                         <Form.Control type="text" disabled={inProgress} value={location} maxLength={30} data-var="location" onChange={this.valueChanged}/>
                     </Form.Group>
                 </Col>
+                <Col lg={6} xl={4}>
+                        <Form.Group>
+                            <Form.Label>{_t('profile-edit.lightning')}</Form.Label>
+                            <InputGroup 
+                                className="mb-3"
+                            >
+                                <Form.Control
+                                    type="text"
+                                    disabled={inProgress}
+                                    value={btcLightningAddress}
+                                    maxLength={100}
+                                    data-var="btcLightningAddress"
+                                    placeholder="Paste your bitcoin lightning address here"
+                                    onChange={this.valueChanged}
+                                    className="text-primary"
+                                />
+                                <InputGroup.Append>
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        className="copy-to-clipboard"
+                                        onClick={() => this.copyToClipboard(btcLightningAddress)}
+                                    >
+                                        {copyContent}
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </Form.Group>
+                    </Col>
             </Form.Row>
             {changed && <Button onClick={this.update} disabled={inProgress || uploading}>{inProgress && spinner} {_t('g.update')}</Button>}
         </div>
