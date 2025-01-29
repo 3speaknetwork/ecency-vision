@@ -21,7 +21,7 @@ RUN yarn install --non-interactive --frozen-lockfile --ignore-optional --product
 FROM node:12.16.2-alpine as production
 
 # Add Tini
-ENV TINI_VERSION v0.18.0
+ENV TINI_VERSION=v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static /tini
 RUN chmod +x /tini
 
