@@ -4,6 +4,7 @@ import {Form, FormControl, InputGroup, Button, Spinner, Col} from "react-bootstr
 
 import {ActiveUser} from "../../store/active-user/types";
 import {Account, FullAccount} from "../../store/accounts/types";
+import { Global } from "../../store/global/types";
 
 import BaseComponent from "../base";
 import UploadButton from "../image-upload-button";
@@ -20,6 +21,7 @@ interface Props {
     account: Account;
     addAccount: (data: Account) => void;
     updateActiveUser: (data?: Account) => void;
+    global: Global;
 }
 
 interface State {
@@ -136,6 +138,9 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
             changed
         } = this.state;
 
+        const { global } = this.props
+        console.log("glob...", global)
+
         const spinner = <Spinner animation="grow" variant="light" size="sm" style={{marginRight: "6px"}}/>;
 
         return <div className="profile-edit ml-4">
@@ -201,35 +206,35 @@ export default class ProfileEdit extends BaseComponent<Props, State> {
                         <Form.Control type="text" disabled={inProgress} value={location} maxLength={30} data-var="location" onChange={this.valueChanged}/>
                     </Form.Group>
                 </Col>
-                <Col lg={6} xl={4}>
-                        <Form.Group>
-                            <Form.Label>{_t('profile-edit.lightning')}</Form.Label>
-                            <InputGroup 
-                                className="mb-3"
-                            >
-                                <Form.Control
-                                    type="text"
-                                    disabled={inProgress}
-                                    value={btcLightningAddress}
-                                    maxLength={100}
-                                    data-var="btcLightningAddress"
-                                    placeholder="Paste your bitcoin lightning address here"
-                                    onChange={this.valueChanged}
-                                    className="text-primary"
-                                />
-                                <InputGroup.Append>
-                                    <Button
-                                        variant="primary"
-                                        size="sm"
-                                        className="copy-to-clipboard"
-                                        onClick={() => this.copyToClipboard(btcLightningAddress)}
-                                    >
-                                        {copyContent}
-                                    </Button>
-                                </InputGroup.Append>
-                            </InputGroup>
-                        </Form.Group>
-                    </Col>
+                {global.hive_id === "hive-125568" && <Col lg={6} xl={4}>
+                    <Form.Group>
+                        <Form.Label>{_t('profile-edit.lightning')}</Form.Label>
+                        <InputGroup 
+                            className="mb-3"
+                        >
+                            <Form.Control
+                                type="text"
+                                disabled={inProgress}
+                                value={btcLightningAddress}
+                                maxLength={100}
+                                data-var="btcLightningAddress"
+                                placeholder="Paste your bitcoin lightning address here"
+                                onChange={this.valueChanged}
+                                className="text-primary"
+                            />
+                            <InputGroup.Append>
+                                <Button
+                                    variant="primary"
+                                    size="sm"
+                                    className="copy-to-clipboard"
+                                    onClick={() => this.copyToClipboard(btcLightningAddress)}
+                                >
+                                    {copyContent}
+                                </Button>
+                            </InputGroup.Append>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>}
             </Form.Row>
             {changed && <Button onClick={this.update} disabled={inProgress || uploading}>{inProgress && spinner} {_t('g.update')}</Button>}
         </div>
