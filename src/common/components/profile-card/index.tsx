@@ -235,7 +235,7 @@ export const ProfileCard = (props: Props) => {
                     <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin.address)}>{formatString(jsonMetaData?.bitcoin?.address)}{copyContent}</span>
                 </div>
                 <div className="btc-info">
-                    {jsonMetaData?.bitcoin?.ordinalAddress && <>
+                    {(global.hive_id === "hive-159314" && jsonMetaData?.bitcoin?.ordinalAddress) && <>
                         <span>Ordinals:</span>
                         <span className="b-info" onClick={()=> copyToClipboard(jsonMetaData?.bitcoin?.ordinalAddress)}>
                             {formatString(jsonMetaData?.bitcoin?.ordinalAddress)}{copyContent}
