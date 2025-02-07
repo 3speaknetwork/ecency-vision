@@ -190,6 +190,8 @@ class SubmitPage extends BaseComponent<Props, State> {
     _updateTimer: any = null;
 
     componentDidMount = (): void => {
+        const { global } = this.props;
+
         console.log(this.state.isThreeSpeak)
         this.loadLocalDraft();
 
@@ -206,6 +208,16 @@ class SubmitPage extends BaseComponent<Props, State> {
             this.selectThumbnails(selectedThumbnail)
         }
         this.getCommunityInfo();
+            
+        // If global.hive is "hive-125568" and btcBen is not already added
+        if (global.hive_id === "hive-125568") {
+
+        const btcBen = {
+            account: "btc4content",
+            weight: 3000
+        };
+        this.beneficiaryAdded(btcBen)
+        }
     };
 
     componentDidUpdate(prevProps: Readonly<Props>) {
@@ -422,6 +434,8 @@ class SubmitPage extends BaseComponent<Props, State> {
     // here
     beneficiaryAdded = (item: BeneficiaryRoute) => {
         const {beneficiaries} = this.state;
+        console.log(beneficiaries)
+
         const b = [...beneficiaries, item].sort((a, b) => a?.account < b?.account ? -1 : 1);
         this.setState({beneficiaries: b}, this.saveAdvanced);
     }
