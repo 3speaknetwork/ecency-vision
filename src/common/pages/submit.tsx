@@ -842,7 +842,8 @@ class SubmitPage extends BaseComponent<Props, State> {
                 <div className={_c(`app-content submit-page ${editingEntry !== null ? "editing" : ""} ${containerClasses}`)}>
                     <div className="editor-panel">
                         {(editingEntry === null && activeUser) && <div className="community-input">
-                            {CommunitySelector({
+                            <span>Posting to {global.communityTitle}</span>
+                            {/* {CommunitySelector({
                                 ...this.props,
                                 activeUser,
                                 tags,
@@ -856,7 +857,7 @@ class SubmitPage extends BaseComponent<Props, State> {
 
                                     this.tagsChanged(newTags);
                                 }
-                            })}
+                            })} */}
                         </div>}
                         {EditorToolbar({
                             ...this.props,

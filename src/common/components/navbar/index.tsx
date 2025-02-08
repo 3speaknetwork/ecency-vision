@@ -220,7 +220,7 @@ export class NavBar extends Component<Props, State> {
 };
 
 openSubmitPage = async () => {
-  const { activeUser, history }  = this.props
+  const { activeUser, history, community }  = this.props
   try {
     ////MIGHT NOT BE NEEDED IF WE ARE CHECKING BTC BALANCE ON LOGIN
     if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
@@ -235,7 +235,7 @@ openSubmitPage = async () => {
             error("You must have at least 0.00005 btc to create a post");
             return;
           } else {
-            history.push(`/submit`);
+            history.push(`/submit?com=${community.name}`);
           }
   
         } else {
@@ -244,7 +244,7 @@ openSubmitPage = async () => {
         }
 
       } else {
-        history.push(`/submit`);
+        history.push(`/submit?com=${community.name}`);
       }
   } catch (error) {
     console.log(error)
