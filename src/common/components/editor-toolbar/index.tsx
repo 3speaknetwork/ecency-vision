@@ -438,18 +438,19 @@ export class EditorToolbar extends Component<Props> {
                     </Tooltip>
 
                     {(() => {
-                        if (activeUser && global.isMobile) {
-                            return <Tooltip content={_t("editor-toolbar.image")}>
-                                <div className="editor-tool" onClick={this.toggleMobileImage}>
-                                    {imageSvg}
-                                </div>
-                            </Tooltip>
-                        }
+                        // if (activeUser && global.isMobile) {
+                        //     return <Tooltip content={_t("editor-toolbar.image")}>
+                        //         <div className="editor-tool" onClick={this.toggleMobileImage}>
+                        //             {imageSvg}
+                        //         </div>
+                        //     </Tooltip>
+                        // }
 
                         return <Tooltip content={_t("editor-toolbar.image")}>
                             <div
                                 className="editor-tool"
-                                onClick={this.toggleImage}>
+                                // onClick={this.toggleImage}
+                                >
                                 {imageSvg}
 
                                 {activeUser && (
@@ -461,17 +462,23 @@ export class EditorToolbar extends Component<Props> {
                                                 const el = this.fileInput.current;
                                                 if (el) el.click();
                                             }}>
-                                            Upload from PC
+                                            From device
                                         </div>
-                                        {global.usePrivate && <div
+                                        <div
                                           className="sub-tool-menu-item"
                                           onClick={(e: React.MouseEvent<HTMLElement>) => {
                                               e.stopPropagation();
                                               this.toggleGallery();
                                           }}
                                         >
-                                            {_t("editor-toolbar.gallery")}
-                                        </div>}
+                                            {/* {_t("editor-toolbar.gallery")} */}Photo gallery
+                                        </div>
+                                        <div
+                                            className="sub-tool-menu-item"
+                                            onClick={this.toggleImage}
+                                            >
+                                            Image url
+                                        </div>
                                     </div>
                                 )}
                             </div>

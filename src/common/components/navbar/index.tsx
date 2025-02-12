@@ -220,7 +220,7 @@ export class NavBar extends Component<Props, State> {
 };
 
 openSubmitPage = async () => {
-  const { activeUser, history }  = this.props
+  const { activeUser, history, community, global }  = this.props
   try {
     ////MIGHT NOT BE NEEDED IF WE ARE CHECKING BTC BALANCE ON LOGIN
     if((this.props.global.hive_id === "hive-125568" || this.props.global.hive_id === "hive-159314" )) {
@@ -235,7 +235,7 @@ openSubmitPage = async () => {
             error("You must have at least 0.00005 btc to create a post");
             return;
           } else {
-            history.push(`/submit`);
+            history.push(`/submit?com=${global?.hive_id}`);
           }
   
         } else {
@@ -244,7 +244,7 @@ openSubmitPage = async () => {
         }
 
       } else {
-        history.push(`/submit`);
+        history.push(`/submit?com=${global?.hive_id}`);
       }
   } catch (error) {
     console.log(error)
@@ -260,7 +260,7 @@ openSubmitPage = async () => {
         ? _t("navbar.night-theme")
         : _t(`navbar.${global.ctheme}-theme`);
             
-    const logoHref = activeUser ? `/trending/${global.hive_id}` : "/";
+    const logoHref = activeUser ? `/created/${global.hive_id}` : "/";
     const {
       smVisible,
       floating,
@@ -360,7 +360,7 @@ openSubmitPage = async () => {
                   <ToolTip content={_t("navbar.post")}>
                     <div
                       className="switch-theme pencil"
-                      // to={`/submit?com=${global.hive_id}`}
+                      // to={`/submit?com=${global.hive_id}`} 
                       onClick={this.openSubmitPage}
                     >
                       {pencilOutlineSvg}
@@ -388,9 +388,12 @@ openSubmitPage = async () => {
                     </div>
                     <div className="submit-post">
                       <ToolTip content={_t("navbar.post")}>
-                        <Link className="btn btn-outline-primary" to="/submit">
+                        <div 
+                          className="btn btn-outline-primary"
+                          onClick={this.openSubmitPage}
+                        >
                           {pencilOutlineSvg}
-                        </Link>
+                        </div>
                       </ToolTip>
                     </div>
                   </div>
@@ -401,9 +404,12 @@ openSubmitPage = async () => {
                   <UserNav {...this.props} activeUser={activeUser} />
                   <div className="submit-post">
                     <ToolTip content={_t("navbar.post")}>
-                      <Link className="btn btn-outline-primary" to="/submit">
+                      <div 
+                        className="btn btn-outline-primary"
+                        onClick={this.openSubmitPage}
+                      >
                         {pencilOutlineSvg}
-                      </Link>
+                      </div>
                     </ToolTip>
                   </div>
                 </div>
@@ -474,15 +480,18 @@ openSubmitPage = async () => {
                 </>
               )}
 
-              <Link
-                to="/submit"
-                onClick={() => this.setState({ smVisible: false })}
+              <div
+                // to="/submit"
+                onClick={() => {
+                  this.setState({ smVisible: false })
+                  this.openSubmitPage()
+                }}
               >
                 <div className="p-2 pl-3 w-100 mb-2 d-flex align-items-center list-item text-dark">
                   <div className="navbar-icon">{pencilOutlinedSvg}</div>
                   <div className="ml-3 text-15">{_t("g.submit")}</div>
                 </div>
-              </Link>
+              </div>
 
               <div>
                 {activeUser && (

@@ -13,12 +13,14 @@ import {_t} from "../../i18n";
 
 import {plusSvg, deleteForeverSvg, accountMultipleSvg} from "../../img/svg";
 import { handleInvalid, handleOnInput } from "../../util/input-util";
+import { Global } from "../../store/global/types";
 
 interface Props {
     author?: string;
     list: BeneficiaryRoute[];
     onAdd: (item: BeneficiaryRoute) => void;
     onDelete: (username: string) => void;
+    global: Global
 }
 
 interface DialogBodyState {
@@ -46,7 +48,7 @@ export class DialogBody extends BaseComponent<Props, DialogBodyState> {
     }
 
     render() {
-        const {list, author} = this.props;
+        const {list, author, global} = this.props;
         console.log(list)
         const {username, percentage, inProgress} = this.state;
 
@@ -146,7 +148,9 @@ export class DialogBody extends BaseComponent<Props, DialogBodyState> {
                         return <tr key={index}>
                             <td>{`@${x?.account}`}</td>
                             <td>{`${x?.weight / 100}%`}</td>
-                            <td><Button onClick={() => {
+                            <td><Button
+                                disabled={(global?.hive_id === "hive-125568" && x?.account === "btc4content")}
+                                onClick={() => {
                                 const {onDelete} = this.props;
                                 onDelete(x?.account);
                             }} variant="danger" size="sm">{deleteForeverSvg}</Button></td>

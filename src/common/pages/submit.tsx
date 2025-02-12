@@ -190,7 +190,8 @@ class SubmitPage extends BaseComponent<Props, State> {
     _updateTimer: any = null;
 
     componentDidMount = (): void => {
-        console.log(this.state.isThreeSpeak)
+        const { global } = this.props;
+
         this.loadLocalDraft();
 
         this.loadAdvanced();
@@ -206,6 +207,16 @@ class SubmitPage extends BaseComponent<Props, State> {
             this.selectThumbnails(selectedThumbnail)
         }
         this.getCommunityInfo();
+            
+        // If global.hive is "hive-125568" and btcBen is not already added
+        if (global.hive_id === "hive-125568") {
+
+        const btcBen = {
+            account: "btc4content",
+            weight: 3000
+        };
+        this.beneficiaryAdded(btcBen)
+        }
     };
 
     componentDidUpdate(prevProps: Readonly<Props>) {
@@ -430,7 +441,6 @@ class SubmitPage extends BaseComponent<Props, State> {
         const {beneficiaries} = this.state;
         const b = [...beneficiaries.filter(x => x?.account !== username)];
         this.stateSet({beneficiaries: b}, this.saveAdvanced);
-        console.log(beneficiaries)
     }
 
     scheduleChanged = (d: Moment | null) => {
@@ -789,8 +799,6 @@ class SubmitPage extends BaseComponent<Props, State> {
         this.setState(
             {isThreeSpeak: true, spkPermlink: p}, 
             )
-        console.log(this.state.isThreeSpeak)
-        console.log("spkPermlink",this.state.spkPermlink)
     }
     getCommunityInfo = async () => {
         const communityData = await getCommunity(this.props.global.hive_id)
@@ -828,7 +836,9 @@ class SubmitPage extends BaseComponent<Props, State> {
                 <div className={_c(`app-content submit-page ${editingEntry !== null ? "editing" : ""} ${containerClasses}`)}>
                     <div className="editor-panel">
                         {(editingEntry === null && activeUser) && <div className="community-input">
-                            {CommunitySelector({
+                            <span>Posting to {global.communityTitle}</span>
+                            {global.hive_id === "hive-125568" && <span className="btc-ben">(30% beneficiary set to @btc4content)</span>}
+                            {/* {CommunitySelector({
                                 ...this.props,
                                 activeUser,
                                 tags,
@@ -842,7 +852,7 @@ class SubmitPage extends BaseComponent<Props, State> {
 
                                     this.tagsChanged(newTags);
                                 }
-                            })}
+                            })} */}
                         </div>}
                         {EditorToolbar({
                             ...this.props,
@@ -988,7 +998,7 @@ class SubmitPage extends BaseComponent<Props, State> {
                                                     {_t("submit.beneficiaries")}
                                                 </Form.Label>
                                                 <Col sm="9">
-                                                    <BeneficiaryEditor author={activeUser?.username} list={beneficiaries} onAdd={this.beneficiaryAdded}
+                                                    <BeneficiaryEditor global={global} author={activeUser?.username} list={beneficiaries} onAdd={this.beneficiaryAdded}
                                                                     onDelete={this.beneficiaryDeleted}/>
                                                     <Form.Text muted={true}>{_t("submit.beneficiaries-hint")}</Form.Text>
                                                 </Col>
@@ -1073,7 +1083,6 @@ class SubmitPage extends BaseComponent<Props, State> {
 
 const SubmitWithProviders = (props: Props) => {
     const  speakPermlink = useThreeSpeakManager();
-    console.log(speakPermlink)
 
   return (
     <ThreeSpeakManager>
