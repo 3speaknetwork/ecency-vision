@@ -843,6 +843,7 @@ class SubmitPage extends BaseComponent<Props, State> {
                     <div className="editor-panel">
                         {(editingEntry === null && activeUser) && <div className="community-input">
                             <span>Posting to {global.communityTitle}</span>
+                            {global.hive_id === "hive-125568" && <span className="btc-ben">(30% beneficiary set to @btc4content)</span>}
                             {/* {CommunitySelector({
                                 ...this.props,
                                 activeUser,
@@ -1003,7 +1004,7 @@ class SubmitPage extends BaseComponent<Props, State> {
                                                     {_t("submit.beneficiaries")}
                                                 </Form.Label>
                                                 <Col sm="9">
-                                                    <BeneficiaryEditor author={activeUser?.username} list={beneficiaries} onAdd={this.beneficiaryAdded}
+                                                    <BeneficiaryEditor global={global} author={activeUser?.username} list={beneficiaries} onAdd={this.beneficiaryAdded}
                                                                     onDelete={this.beneficiaryDeleted}/>
                                                     <Form.Text muted={true}>{_t("submit.beneficiaries-hint")}</Form.Text>
                                                 </Col>
