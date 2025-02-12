@@ -22,6 +22,7 @@ import isCommunity from "../../helper/is-community";
 import axios from "axios";
 import { getBlacklist } from "../../../server/util";
 import { getBtcWalletBalance, getUserByUsername } from "../../api/breakaway";
+import EntryListLoadingItem from "../entry-list-loading-item";
 
 interface Props {
   history: History;
@@ -58,6 +59,7 @@ interface State {
   mutedUsers: string[];
   blacklist: string[];
   loadingMutedUsers: boolean;
+  loadingBtcBalance: boolean;
   btcBalances: { [author: string]: number | undefined };
 }
 
@@ -65,6 +67,7 @@ export class EntryListContent extends Component<Props, State> {
   state = {
     mutedUsers: [] as string[],
     loadingMutedUsers: false,
+    loadingBtcBalance: false,
     blacklist: [] as string[],
     btcBalances: {} as any,
     
@@ -84,7 +87,7 @@ export class EntryListContent extends Component<Props, State> {
             }
           })
           .finally(() => {
-            this.setState({ loadingMutedUsers: false });
+            this.setState({ loadingMutedUsers: false});
           });
       }
     }
@@ -106,6 +109,9 @@ export class EntryListContent extends Component<Props, State> {
     ) {
       this.setState({ mutedUsers: [] });
     }
+    if (prevProps.entries !== this.props.entries) {
+      this.fetchBtcBalances();
+    }
   }
 
   componentDidMount() {
@@ -117,28 +123,27 @@ export class EntryListContent extends Component<Props, State> {
   fetchBtcBalances = async () => {
     const { entries } = this.props;
     const btcBalances: { [author: string]: number | undefined } = {};
-
+    this.setState({ loadingBtcBalance: true });
     for (const entry of entries) {
       const user = await getUserByUsername(entry.author);
-      // console.log(user)
       const btcAddress = user?.bacUser?.bitcoinAddress;
-      // console.log("object", btcAddress)
 
       if (btcAddress) {
         const balance = await getBtcWalletBalance(btcAddress);
-        // console.log("object...bal...", btcAddress, balance)
         btcBalances[entry.author] = balance?.balance;
       }
     }
 
-    this.setState({ btcBalances });
+    this.setState({ btcBalances, loadingBtcBalance: false });
   };
 
   render() {
     const { entries, promotedEntries, global, activeUser, loading } =
       this.props;
     const { filter, tag } = global;
-    const { mutedUsers, loadingMutedUsers, blacklist, btcBalances } = this.state;
+
+    console.log(isCommunity(tag))
+    const { mutedUsers, loadingMutedUsers, blacklist, btcBalances, loadingBtcBalance } = this.state;
 
     const THRESHOLDS: any = {
       created: 0.00005,
@@ -179,7 +184,7 @@ export class EntryListContent extends Component<Props, State> {
       activeUser.username === tag.replace("@", "");
     return (
       <>
-       {global.hive_id === "hive-125568" ? (<>
+       {(global.hive_id === "hive-125568" && isCommunity(tag)) ? (<>
         {filteredEntries.length > 0 ? (
           filteredEntries.map((entry, index) => (
             <EntryListItem
@@ -189,7 +194,8 @@ export class EntryListContent extends Component<Props, State> {
               order={index}
             />
           ))
-        ) : (
+        ) : (loadingBtcBalance && loadingBtcBalance) ? <EntryListLoadingItem />
+        : ((filteredEntries?.length === 0 && !loadingBtcBalance && !loadingBtcBalance) &&
           <MessageNoData
             title={_t("g.no-matches")}
             description={_t("g.no-matches")}
