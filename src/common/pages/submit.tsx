@@ -192,7 +192,6 @@ class SubmitPage extends BaseComponent<Props, State> {
     componentDidMount = (): void => {
         const { global } = this.props;
 
-        console.log(this.state.isThreeSpeak)
         this.loadLocalDraft();
 
         this.loadAdvanced();
@@ -434,8 +433,6 @@ class SubmitPage extends BaseComponent<Props, State> {
     // here
     beneficiaryAdded = (item: BeneficiaryRoute) => {
         const {beneficiaries} = this.state;
-        console.log(beneficiaries)
-
         const b = [...beneficiaries, item].sort((a, b) => a?.account < b?.account ? -1 : 1);
         this.setState({beneficiaries: b}, this.saveAdvanced);
     }
@@ -444,7 +441,6 @@ class SubmitPage extends BaseComponent<Props, State> {
         const {beneficiaries} = this.state;
         const b = [...beneficiaries.filter(x => x?.account !== username)];
         this.stateSet({beneficiaries: b}, this.saveAdvanced);
-        console.log(beneficiaries)
     }
 
     scheduleChanged = (d: Moment | null) => {
@@ -803,8 +799,6 @@ class SubmitPage extends BaseComponent<Props, State> {
         this.setState(
             {isThreeSpeak: true, spkPermlink: p}, 
             )
-        console.log(this.state.isThreeSpeak)
-        console.log("spkPermlink",this.state.spkPermlink)
     }
     getCommunityInfo = async () => {
         const communityData = await getCommunity(this.props.global.hive_id)
@@ -1089,7 +1083,6 @@ class SubmitPage extends BaseComponent<Props, State> {
 
 const SubmitWithProviders = (props: Props) => {
     const  speakPermlink = useThreeSpeakManager();
-    console.log(speakPermlink)
 
   return (
     <ThreeSpeakManager>
